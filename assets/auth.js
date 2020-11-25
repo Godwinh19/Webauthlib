@@ -18,9 +18,9 @@
         startbutton = document.getElementById('startbutton');
 
         navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false
-        })
+                video: true,
+                audio: false
+            })
             .then(function(stream) {
                 video.srcObject = stream;
                 video.play();
@@ -78,5 +78,35 @@
         }
     }
 
-    window.addEventListener('load', startup, false);
+    const sendPicture = async e => {
+        let pic = document.getElementById('photo');
+
+        let data = new FormData();
+
+        data.append('image', {
+            uri: pic.src,
+            name: pic.src.split('/').pop()
+        });
+
+        console.log(data.getAll('image'));
+        let upload = await fetch('http://localhost/api/public/api/upload', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data'
+            },
+            body: data
+        });
+
+        if (upload.ok) {
+            upload = await upload.json();
+
+            console.log(upload);
+        } else {
+            console.log(upload);
+        }
+    }
+
+    // window.addEventListener('load', startup, false);
+    document.getElementById("send").addEventListener("click", sendPicture, false);
 })();
