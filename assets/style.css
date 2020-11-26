@@ -24,7 +24,8 @@
     display: inline-block;
 }
 
-#startbutton,#send {
+#startbutton,
+#send {
     display: block;
     position: relative;
     margin-left: auto;
@@ -40,7 +41,9 @@
     color: rgba(255, 255, 255, 1.0);
     cursor: pointer;
 }
-#startbutton:hover, #send:hover{
+
+#startbutton:hover,
+#send:hover {
     background-color: darkred;
 }
 

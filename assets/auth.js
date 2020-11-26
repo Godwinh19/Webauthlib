@@ -1,6 +1,5 @@
 /* JS comes here */
 (function() {
-
     var width = 320; // We will scale the photo width to this
     var height = 0; // This will be computed based on the input stream
 
@@ -89,21 +88,37 @@
         data.append('image', blob);
         console.log(blob);
 
-        let upload = await fetch('http://192.168.8.114/api/public/api/upload', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
+        $.ajax({
+            url: "http://192.168.8.114/api/public/api/upload",
+            dataType: "text",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            type: 'POST',
+            success: result => {
+                console.log(result);
             },
-            body: data
+            failed: error => {
+                console.log(error);
+            }
         });
 
-        if (upload.ok) {
-            upload = await upload.json();
+        // let upload = await fetch('http://192.168.8.114/api/public/api/upload', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json'
+        //     },
+        //     body: data
+        // });
 
-            console.log(upload);
-        } else {
-            console.log(upload);
-        }
+        // if (upload.ok) {
+        //     upload = await upload.json();
+
+        //     console.log(upload);
+        // } else {
+        //     console.log(upload);
+        // }
     }
 
     function b64toBlob(b64Data, contentType, sliceSize) {
@@ -126,7 +141,7 @@
             byteArrays.push(byteArray);
         }
 
-        var blob = new Blob(byteArrays, {type: contentType});
+        var blob = new Blob(byteArrays, { type: contentType });
         return blob;
     }
 
