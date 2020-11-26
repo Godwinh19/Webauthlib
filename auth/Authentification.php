@@ -6,7 +6,7 @@ class Authentification{
     }
 
     /**
-     * To save new user image with the image name his uername
+     * To save new user image with the image name his username
      * @param $user_name
      * @param $image
      */
