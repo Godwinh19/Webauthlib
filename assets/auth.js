@@ -89,10 +89,10 @@
         data.append('image', blob);
         console.log(blob);
 
-        let upload = await fetch('http://localhost/api/public/api/upload', {
+        let upload = await fetch('http://192.168.8.114/api/public/api/upload', {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'application/json'
             },
             body: data
         });
