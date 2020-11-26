@@ -88,37 +88,23 @@
         data.append('image', blob);
         console.log(blob);
 
-        $.ajax({
-            url: "http://192.168.8.114/api/public/api/upload",
-            dataType: "text",
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: data,
-            type: 'POST',
-            success: result => {
-                console.log(result);
-            },
-            failed: error => {
-                console.log(error);
-            }
+        let upload = await fetch('http://localhost/Webauthapi/public/api/upload', {
+             method: 'POST',
+             headers: {
+                 'Accept': 'application/json'
+             },
+             body: data
         });
 
-        // let upload = await fetch('http://192.168.8.114/api/public/api/upload', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json'
-        //     },
-        //     body: data
-        // });
+        if (upload.ok) {
+             upload = await upload.json();
 
-        // if (upload.ok) {
-        //     upload = await upload.json();
+             console.log(upload);
+        } else {
+            upload = await upload.json();
 
-        //     console.log(upload);
-        // } else {
-        //     console.log(upload);
-        // }
+            console.log(upload);
+        }
     }
 
     function b64toBlob(b64Data, contentType, sliceSize) {

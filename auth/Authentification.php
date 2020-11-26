@@ -2,7 +2,7 @@
 
 class Authentification{
     function __construct(){
-
+    include '../utils.php';
     }
 
     /**
@@ -20,7 +20,12 @@ class Authentification{
      * @param $username
      */
     public function verify_user($username){
+        //var_dump(glob(ASSETS .'/*jpg'));die();
 
+        $files = glob(ASSETS .'/*jpg');
+        foreach ($files as $file){
+            echo "filename: ".$file." <br />";
+        }
     }
 
     /**
@@ -31,3 +36,5 @@ class Authentification{
 
     }
 }
+$auth = new Authentification();
+$auth->verify_user("helo");
