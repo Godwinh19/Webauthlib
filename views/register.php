@@ -16,7 +16,7 @@
 <body>
 <div class="wrapper">
     <div class="container mt-5">
-        <div class="card col-lg-12 m-auto h-auto border rounded p-0 mt-5" style="background-color: white;">
+        <div class="card col-lg-10 m-auto h-auto border rounded p-0 mt-5" style="background-color: white;">
             <div class="card-header">
                 <h5 class="text-center">
                     Enregistrez vous ici!
@@ -57,7 +57,7 @@
                             <div class="camera">
                                 <video id="video">Video stream unavailable</video>
                             </div>
-                            <div><button id="startbutton" class="btn">Take photo</button></div>
+                            <div><button id="startbutton" class="btn btn-primary">Take photo</button></div>
                         </div>
                         <div class="form-group col-md-6">
                             <div class="output">
@@ -66,8 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center
-                                justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between">
                         <button class="btn btn-outline-danger" onclick="location.href= 'test.php'">Annuler</button>
                         <span id='submit' class="btn btn-info float-right" onclick="submitForm(this)">S'inscrire</span>
                     </div>

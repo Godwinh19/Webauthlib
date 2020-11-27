@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <a href="register.html">Ou Enregistrer vous ici.</a>
+            <a href="register.php">Ou Enregistrer vous ici.</a>
         </div>
     </div>
     <script src="https://co de.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
