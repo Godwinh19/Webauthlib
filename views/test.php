@@ -9,12 +9,11 @@
 </head>
 
 <body>
-    <div class="container p-3">
+    <div class="container p-3 mt-5">
         <div class="contentarea col-lg-10 border rounded m-auto">
             <h1 class="p-2">
                 WEB AUTHN
             </h1>
-            <hr>
             <div class="form-group">
                 <input type="text" class="form-control" id="name" placeholder="Enter your name">
             </div>
