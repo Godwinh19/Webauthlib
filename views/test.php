@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <a href="register.html" class="p-5">Ou Enregistrer vous ici.</a>
+            <a href="register.php" class="p-5">Ou Enregistrer vous ici.</a>
         </div>
     </div>
     <script src="../assets/jquery/jquery.min.js"></script>
