@@ -1,4 +1,12 @@
-(function() {
+window.isValid = {
+    nom: false,
+    prenoms: false,
+    email: false,
+    phone: false,
+    image: false
+};
+
+(function () {
     var width = 320; // We will scale the photo width to this
     var height = 0; // This will be computed based on the input stream
 
@@ -59,6 +67,7 @@
 
         var data = canvas.toDataURL('image/png');
         photo.setAttribute('src', data);
+        window.isValid.image = false;
     }
 
     function takepicture() {
@@ -70,8 +79,9 @@
 
             var data = canvas.toDataURL('image/png');
             photo.setAttribute('src', data);
-
-            sendPicture(data);
+            window.isValid.image = true;
+            window.data = data;
+            // sendPicture(data);
         } else {
             clearphoto();
         }
@@ -84,18 +94,91 @@ document.querySelectorAll('.form-control').forEach(inp => {
         if (!!currentTarget.value && currentTarget.value.length > 2) {
             if (currentTarget.id === 'passconf' && currentTarget.value !== document.getElementById('password').value) {
                 currentTarget.nextElementSibling.classList.remove('text-hidden');
+                window.isValid[currentTarget.id] = false
                 currentTarget.nextElementSibling.innerText = "Non correspondance";
+            } else if (currentTarget.id === 'phone' && (currentTarget.value.length < 8 || currentTarget.value.length > 15 || !/(?<=\s|^)\d+(?=\s|$)/.test(currentTarget.value))) {
+                currentTarget.nextElementSibling.classList.remove('text-hidden');
+                window.isValid[currentTarget.id] = false
+                currentTarget.nextElementSibling.innerText = "Numero invalide";
             } else {
+                window.isValid[currentTarget.id] = true
                 currentTarget.nextElementSibling.classList.add('text-hidden');
             }
         } else {
+            window.isValid[currentTarget.id] = false
             currentTarget.nextElementSibling.classList.remove('text-hidden');
             currentTarget.nextElementSibling.innerText = currentTarget.value === '' ? "Le champ est requis" : "Nombre de charactères insuffisant";
         }
     }, false);
 })
 
+const sendPicture = async image => {
+    let block = image.split(";");
+    let contentType = block[0].split(":")[1];
+    let realData = block[1].split(",")[1];
+    let blob = b64toBlob(realData, contentType);
+
+    let data = new FormData();
+    data.append('image', blob);
+    console.log(blob);
+
+    let upload = await fetch(location.origin + '/Webauthlib/auth/upload.php', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        },
+        body: data
+    });
+
+    if (upload.ok) {
+        upload = await upload.json();
+
+        console.log(upload);
+    } else {
+        upload = await upload.json();
+
+        console.log(upload);
+    }
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}
+
 const submitForm = async btn => {
+    console.log(window.isValid)
+
+    if (!(window.isValid.nom && window.isValid.prenoms && window.isValid.phone && window.isValid.email && window.isValid.image)) {
+        btn.innerText = "Echec !";
+        btn.classList.replace('btn-info', 'btn-danger');
+        setTimeout(() => {
+            btn.innerText = "Réessayer";
+            btn.classList.replace('btn-danger', 'btn-info');
+            btn.classList.remove('disabled');
+        }, 5000);
+        return;
+    }
+
     inputs = document.querySelectorAll('.form-control');
     let data = {};
 
@@ -108,7 +191,10 @@ const submitForm = async btn => {
         };
     }
 
+
     btn.classList.add('disabled');
+    sendPicture(window.data);
+    return;
     let signup = await fetch('localhost', {
         method: 'POST',
         headers: {
