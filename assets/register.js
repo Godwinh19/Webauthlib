@@ -112,15 +112,15 @@ document.querySelectorAll('.form-control').forEach(inp => {
     }, false);
 })
 
-const sendPicture = async image => {
+const sendPicture = async (image, inputs, btn) => {
     let block = image.split(";");
-    let contentType = block[0].split(":")[1];
+    let contentType = (block[0].split(":")[1]).split("/")[1]
     let realData = block[1].split(",")[1];
     let blob = b64toBlob(realData, contentType);
 
     let data = new FormData();
     data.append('image', blob);
-    console.log(blob);
+    data.append('user', JSON.stringify(inputs));
 
     let upload = await fetch(location.origin + '/Webauthlib/auth/upload.php', {
         method: 'POST',
@@ -132,12 +132,38 @@ const sendPicture = async image => {
 
     if (upload.ok) {
         upload = await upload.json();
-
         console.log(upload);
+
+        if (upload.success) {
+            btn.classList.remove('disabled');
+            btn.innerText = "Succès !"
+            btn.classList.replace('btn-info', 'btn-success');
+            setTimeout(() => {
+                btn.innerText = "S'inscrire";
+                btn.classList.replace('btn-success', 'btn-info');
+                btn.classList.remove('disabled');
+                location.href = 'test.php';
+            }, 1000);
+        } else {
+            btn.innerText = "Echec !"
+            btn.classList.replace('btn-info', 'btn-danger');
+            setTimeout(() => {
+                btn.innerText = "Réessayer";
+                btn.classList.replace('btn-danger', 'btn-info');
+                btn.classList.remove('disabled');
+            }, 5000);
+        }
     } else {
         upload = await upload.json();
-
         console.log(upload);
+
+        btn.innerText = "Echec !";
+        btn.classList.replace('btn-info', 'btn-danger');
+        setTimeout(() => {
+            btn.innerText = "Réessayer";
+            btn.classList.replace('btn-danger', 'btn-info');
+            btn.classList.remove('disabled');
+        }, 5000);
     }
 }
 
@@ -191,51 +217,5 @@ const submitForm = async btn => {
         };
     }
 
-
-    btn.classList.add('disabled');
-    sendPicture(window.data);
-    return;
-    let signup = await fetch('localhost', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-
-    if (!signup.ok) {
-        console.log(signup);
-
-        btn.innerText = "Echec !";
-        btn.classList.replace('btn-info', 'btn-danger');
-        setTimeout(() => {
-            btn.innerText = "Réessayer";
-            btn.classList.replace('btn-danger', 'btn-info');
-            btn.classList.remove('disabled');
-        }, 5000);
-    } else {
-        signup = await signup.json();
-        console.log(signup);
-
-        if (!signup.success) {
-            btn.innerText = "Echec !"
-            btn.classList.replace('btn-info', 'btn-danger');
-            setTimeout(() => {
-                btn.innerText = "Réessayer";
-                btn.classList.replace('btn-danger', 'btn-info');
-                btn.classList.remove('disabled');
-            }, 5000);
-        } else {
-            btn.classList.remove('disabled');
-            btn.innerText = "Succès !"
-            btn.classList.replace('btn-info', 'btn-success');
-            setTimeout(() => {
-                btn.innerText = "S'inscrire";
-                btn.classList.replace('btn-success', 'btn-info');
-                btn.classList.remove('disabled');
-                location.href = 'index.html';
-            }, 5000);
-        }
-    }
+    sendPicture(window.data, data, btn);
 }
