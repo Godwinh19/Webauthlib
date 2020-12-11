@@ -122,7 +122,7 @@ const sendPicture = async (image, inputs, btn) => {
     let data = new FormData();
     data.append('image', blob);
     data.append('user', JSON.stringify(inputs));
-
+    
     let upload = await fetch(location.origin + '/'+ window.ROOT +'/auth/upload.php', {
         method: 'POST',
         headers: {
@@ -130,9 +130,10 @@ const sendPicture = async (image, inputs, btn) => {
         },
         body: data
     });
+    console.log(upload);
 
     if (upload.ok) {
-        upload = await upload.json();
+        upload = await upload.text();
         console.log(upload);
 
         if (upload.success) {
@@ -155,7 +156,7 @@ const sendPicture = async (image, inputs, btn) => {
             }, 5000);
         }
     } else {
-        upload = await upload.json();
+        upload = await upload.text();
         console.log(upload);
 
         btn.innerText = "Echec !";
