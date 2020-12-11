@@ -12,12 +12,12 @@ class Config{
     private $token = '';
     public $app_id = '';
 
-    public $store_to_database = FALSE;
+    public $store_to_database = TRUE;
     public $db = array(
-        'hostname' => '',
-        'username' => '',
+        'hostname' => '127.0.0.1',
+        'username' => 'root',
         'password' => '',
-        'database' => ''
+        'database' => 'webauth'
     );
 
     /*Database configuration

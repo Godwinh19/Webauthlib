@@ -2,7 +2,7 @@
 
 class Authentification{
     function __construct(){
-    include '../utils.php';
+        require_once '../utils.php';
     }
 
     /**

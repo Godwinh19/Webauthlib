@@ -5,6 +5,7 @@ window.isValid = {
     phone: false,
     image: false
 };
+window.ROOT = 'WebAuthLib';
 
 (function () {
     var width = 320; // We will scale the photo width to this
@@ -122,7 +123,7 @@ const sendPicture = async (image, inputs, btn) => {
     data.append('image', blob);
     data.append('user', JSON.stringify(inputs));
 
-    let upload = await fetch(location.origin + '/Webauthlib/auth/upload.php', {
+    let upload = await fetch(location.origin + '/'+ window.ROOT +'/auth/upload.php', {
         method: 'POST',
         headers: {
             'Accept': 'application/json'
