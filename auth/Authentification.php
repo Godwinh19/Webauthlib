@@ -22,7 +22,7 @@ class Authentification{
     public function verify_user($username){
         //var_dump(glob(ASSETS .'/*jpg'));die();
 
-        $files = glob(ASSETS .'/*jpg');
+        $files = glob( '../images/*png');
         foreach ($files as $file){
             echo "filename: ".$file." <br />";
         }

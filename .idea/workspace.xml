@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad3b0e95-52e3-4a26-ab1e-cc70a8ab3033" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/CustomInspectionsConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config.php" beforeDir="false" afterPath="$PROJECT_DIR$/Config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/register.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/register.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth/Authentification.php" beforeDir="false" afterPath="$PROJECT_DIR$/auth/Authentification.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/godhoudji.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/godhoudji.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/todo.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +18,11 @@
     </execution>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="godwin" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitToolBoxStore">
@@ -32,7 +35,7 @@
                 <list>
                   <RecentBranch>
                     <option name="branchName" value="development" />
-                    <option name="lastUsedInstant" value="1607692608" />
+                    <option name="lastUsedInstant" value="1608109825" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="godwin" />
@@ -81,10 +84,17 @@
       <option name="presentableId" value="Default" />
       <updated>1607673138337</updated>
       <workItem from="1607673139771" duration="4916000" />
+      <workItem from="1608109768139" duration="1740000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="473" y="291" key="com.intellij.ide.util.TipDialog" timestamp="1608109771413">
+      <screen x="57" y="28" width="1543" height="872" />
+    </state>
+    <state x="473" y="291" key="com.intellij.ide.util.TipDialog/57.28.1543.872@57.28.1543.872" timestamp="1608109771413" />
   </component>
 </project>
