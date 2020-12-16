@@ -1,5 +1,5 @@
 /* JS comes here */
-(function() {
+(function () {
     var width = 320; // We will scale the photo width to this
     var height = 0; // This will be computed based on the input stream
 
@@ -10,30 +10,42 @@
     var photo = null;
     var startbutton = null;
 
+    image = null;
+
     function startup() {
         let div = document.getElementById('auth');
-        div.innerHTML = `<div class="form-group d-flex align-items-center justify-content-between">
-                        <div class="col-lg-5">
-                            <div class="camera">
-                                <video id="video">Video stream unavailable</video>
-                            </div>
-                            <div><button id="startbutton" class="btn">Take photo</button></div>
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="output">
-                                <canvas id="canvas"></canvas>
-                                <img id="photo" src="../assets/tmp.jpg" alt="The screen capture will appear in this box.">
-                                <div><button type="submit">Send</button></div>
-                            </div>
-                        </div>
-                    </div>`
-        let form = document.querySelector('#'+div.getAttribute('form'));
-        form.addEventListener('submit', function(e){
+        div.innerHTML = `
+            <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Attention !</strong> Image indisponible !
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-between">
+                <div class="col-lg-5">
+                    <div class="camera">
+                        <video id="video">Video stream unavailable</video>
+                    </div>
+                </div>
+                <div><button id="startbutton" class="btn btn-primary">Capturer l'empreinte</button></div>
+                <div class="col-lg-5">
+                    <div class="output">
+                        <canvas id="canvas"></canvas>
+                        <img id="photo" src="../assets/tmp.jpg" alt="The screen capture will appear in this box.">
+                    </div>
+                </div>
+            </div>
+        `
+        let form = document.querySelector('#' + div.getAttribute('form'));
+
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
-            // do what u have to do 
-            alert('hey!');
-	        e.currentTarget.submit();
-        },true);
+            if (!!image) {
+                sendPicture(image);
+                e.currentTarget.submit();
+            } else {
+                let lib_error = document.getElementById("lib_error");
+                !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
+            }
+        }, true);
 
         video = document.getElementById('video');
         canvas = document.getElementById('canvas');
@@ -41,18 +53,18 @@
         startbutton = document.getElementById('startbutton');
 
         navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: false
-            })
-            .then(function(stream) {
+            video: true,
+            audio: false
+        })
+            .then(function (stream) {
                 video.srcObject = stream;
                 video.play();
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log("An error occurred: " + err);
             });
 
-        video.addEventListener('canplay', function(ev) {
+        video.addEventListener('canplay', function (ev) {
             if (!streaming) {
                 height = video.videoHeight / (video.videoWidth / width);
 
@@ -68,7 +80,7 @@
             }
         }, false);
 
-        startbutton.addEventListener('click', function(ev) {
+        startbutton.addEventListener('click', function (ev) {
             takepicture();
             ev.preventDefault();
         }, false);
@@ -96,7 +108,7 @@
             var data = canvas.toDataURL('image/png');
             photo.setAttribute('src', data);
 
-            sendPicture(data);
+            image = data;
         } else {
             clearphoto();
         }
@@ -113,17 +125,17 @@
         console.log(blob);
 
         let upload = await fetch('http://localhost/Webauthapi/public/api/upload', {
-             method: 'POST',
-             headers: {
-                 'Accept': 'application/json'
-             },
-             body: data
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: data
         });
 
         if (upload.ok) {
-             upload = await upload.json();
+            upload = await upload.json();
 
-             console.log(upload);
+            console.log(upload);
         } else {
             upload = await upload.json();
 
