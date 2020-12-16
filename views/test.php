@@ -24,10 +24,19 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
+                    <form action="" id="formulaire">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                        </div>
+                        <div id="auth" form="formulaire">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit">Send</button>
+                        </div>
+                    </form>
+
+
+                    <!--<div class="form-group d-flex align-items-center justify-content-between">
                         <div class="col-lg-5">
                             <div class="camera">
                                 <video id="video">Video stream unavailable</video>
@@ -41,7 +50,7 @@
                                 <div><button id="send">Send</button></div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <a href="register.php" class="p-5">Ou Enregistrer vous ici.</a>
                 </div>
             </div>
