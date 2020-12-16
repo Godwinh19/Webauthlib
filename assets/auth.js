@@ -12,14 +12,6 @@
 
     function startup() {
         let div = document.getElementById('auth');
-        let form = document.querySelector('#'+div.getAttribute('form'));
-        let submitBtn = document.querySelector("#"+form.id+" button[type='submit']");
-
-        // form.addEventListener('submit',function(e){
-        //     e.preventDefault();
-        //     alert('hey!');
-
-        // },true)
         div.innerHTML = `<div class="form-group d-flex align-items-center justify-content-between">
                         <div class="col-lg-5">
                             <div class="camera">
@@ -31,10 +23,18 @@
                             <div class="output">
                                 <canvas id="canvas"></canvas>
                                 <img id="photo" src="../assets/tmp.jpg" alt="The screen capture will appear in this box.">
-                                <div><button id="send">Send</button></div>
+                                <div><button type="submit">Send</button></div>
                             </div>
                         </div>
                     </div>`
+        let form = document.querySelector('#'+div.getAttribute('form'));
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            // do what u have to do 
+            alert('hey!');
+	        e.currentTarget.submit();
+        },true);
+
         video = document.getElementById('video');
         canvas = document.getElementById('canvas');
         photo = document.getElementById('photo');
