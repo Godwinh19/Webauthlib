@@ -31,7 +31,7 @@
                         <div id="auth" form="formulaire">
                         </div>
                         <div class="form-group">
-                            <button type="submit">Send</button>
+                            <button type="submit" class="btn btn-info">Send</button>
                         </div>
                     </form>
 
