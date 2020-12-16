@@ -24,15 +24,15 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <form action="" id="formulaire">
+                    <form action="#" id="formulaire">
                         <div class="form-group">
                             <input type="text" class="form-control" id="name" placeholder="Enter your name">
                         </div>
                         <div id="auth" form="formulaire">
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <button type="submit">Send</button>
-                        </div>
+                        </div>-->
                     </form>
 
 
