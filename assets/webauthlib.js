@@ -40,8 +40,9 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             </style>
                             <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
                                 <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
-                                <span id="lib_error_message"> </span>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <span id="lib_error_message"> </span>
+                                <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
                             <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
                                 <div class="col-md-5">
@@ -70,8 +71,8 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     let form = $('#auth').parents('form')[0];
 
                     form.addEventListener('submit', async function (e) {
-                        e.preventDefault();
                         const sub = e.currentTarget;
+                        e.preventDefault();
 
                         if (!!image) {
                             let field_value = $('#' + auth_field).val();
@@ -100,7 +101,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             lib_error_message.innerText = lang.toLowerCase() === 'fr' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                         }
-                    }, true);
+                    }, false);
 
                     video = document.getElementById('video');
                     canvas = document.getElementById('canvas');
@@ -167,7 +168,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                         photo.setAttribute('src', data);
 
                         image = data;
-                        console.log(image);
+                        // console.log(image);
                     } else {
                         clearphoto();
                     }
@@ -204,7 +205,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
                                 <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
                                 <span id="lib_error_message"> </span>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
                             <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
                                 <div class="col-md-5">
@@ -233,8 +234,8 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     let form = $('#auth').parents('form')[0];
 
                     form.addEventListener('submit', async function (e) {
-                        e.preventDefault();
                         const sub = e.currentTarget;
+                        e.preventDefault();
                         if (!!image) {
                             let link = "";
                             let tab = upload_link.split("/");
@@ -251,19 +252,19 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
 
                             //convert image got by path to base 64
                             //blob1
-                            let block=image.split(";");
-                            let contentType=block[0].split(":")[1];
-                            let realData=block[1].split(",")[1];
-                            let blob1=b64toBlob(realData,contentType)
+                            let block = image.split(";");
+                            let contentType = block[0].split(":")[1];
+                            let realData = block[1].split(",")[1];
+                            let blob1 = b64toBlob(realData, contentType)
 
 
 
 
                             //blob2
                             let image2 = getBase64Image(image2Html);
-                             block = image2.split(";");
-                             contentType = block[0].split(":")[1];
-                             realData = block[1].split(",")[1];
+                            block = image2.split(";");
+                            contentType = block[0].split(":")[1];
+                            realData = block[1].split(",")[1];
                             let blob2 = b64toBlob(realData, contentType)
 
                             console.log(blob1);
@@ -460,7 +461,7 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
         }
     } catch (error) {
         console.log(error.message);
-        return { success: false, message: error.message };
+        return { success: false, message: lang.toLowerCase() === 'fr' ? "Veuillez  vérifier les permissions du dossier des images !" : "Please, verify the images folder permissions !" };
     }
 }
 
@@ -477,11 +478,11 @@ const login_sendPictures = async (blob1, blob2, api_link, lang) => {
         let data = new FormData();
         data.append('image1', blob1);
         data.append('image2', blob2);
-        var myHeaders=new Headers();
-        myHeaders.append("Content-Type","application/x-www-form-urlencoded")
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded")
         let upload = await fetch(api_link, {
             method: 'POST',
-            headers:myHeaders,
+            headers: myHeaders,
             body: data
         })
 
@@ -502,6 +503,6 @@ const login_sendPictures = async (blob1, blob2, api_link, lang) => {
         }
     } catch (error) {
         console.log(error.message);
-        return { success: false, message: error.message };
+        return { success: false, message: lang.toLowerCase() === 'fr' ? "Veuillez  vérifier les permissions du dossier des images !" : "Please, verify the images folder permissions !" };
     }
 }
