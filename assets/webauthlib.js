@@ -152,6 +152,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                         photo.setAttribute('src', data);
 
                         image = data;
+                        console.log(image);
                     } else {
                         clearphoto();
                     }
@@ -218,13 +219,25 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             image2Html.src = pathImage2;
 
                             //convert image got by path to base 64
-                            let image2 = getBase64Image(image2Html);
-                            let block = image2.split(";");
-                            let contentType = block[0].split(":")[1];
-                            let realData = block[1].split(",")[1];
-                            let blob = b64toBlob(realData, contentType)
+                            //blob1
+                            let block=image.split(";");
+                            let contentType=block[0].split(":")[1];
+                            let realData=block[1].split(",")[1];
+                            let blob1=b64toBlob(realData,contentType)
 
-                            await login_sendPictures(image, blob, api_link, lang).then(response => {
+
+
+
+                            //blob2
+                            let image2 = getBase64Image(image2Html);
+                             block = image2.split(";");
+                             contentType = block[0].split(":")[1];
+                             realData = block[1].split(",")[1];
+                            let blob2 = b64toBlob(realData, contentType)
+
+                            console.log(blob1);
+                            console.log(blob2);
+                            await login_sendPictures(blob1, blob2, api_link, lang).then(response => {
                                 console.log("Request was successfull");
                                 e.currentTarget.submit();
                             }).catch(reason => {
@@ -423,16 +436,16 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
 
 /**
  * Send two images to an api for compairison
- * @param {Image} image1 First image
- * @param {Blob} image2 Second image
+ * @param {Blob} blob1 First image
+ * @param {Blob} blob2 Second image
  * @param {String} api_link Link of the compairison api
  * @returns {void}
  */
-const login_sendPictures = async (image1, image2, api_link, lang) => {
+const login_sendPictures = async (blob1, blob2, api_link, lang) => {
     try {
         let data = new FormData();
-        data.append('image1', image1);
-        data.append('image2', image2);
+        data.append('image1', blob1);
+        data.append('image2', blob2);
         var myHeaders=new Headers();
         myHeaders.append("Content-Type","application/x-www-form-urlencoded")
         let upload = await fetch(api_link, {
