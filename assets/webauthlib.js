@@ -1,5 +1,5 @@
 /**
- * Fingerpring authentication library
+ * Fingerprint authentication library
  * Developed by RII5, EPAC 2020-2021
  * Powered by GENIE INFORMATIQUE TELECOMMUNICATIONS
  * All rights reserved
@@ -172,7 +172,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                 var canvas = null;
                 var photo = null;
                 var startbutton = null;
-                var api_link = "";
+                var api_link = "192.168.8.111:5000";
 
                 image = null;
 
