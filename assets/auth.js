@@ -9,6 +9,7 @@
     var canvas = null;
     var photo = null;
     var startbutton = null;
+    var endPoint="http://localhost:8000"
 
     image = null;
 
@@ -39,7 +40,23 @@
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             if (!!image) {
-                sendPicture(image);
+                let pathImage2="../images/"+document.getElementById('name').value+'.png';
+                let image2Html=new Image();
+                image2Html.src=pathImage2;
+
+                //convert image got by path to base 64
+                let image2=getBase64Image(image2Html);
+                console.log(image2);
+                sendImages(image, image2).then(r =>{
+                     console.log("Request was successfull");
+                    }
+                )
+                    .catch(reason => {
+                        console.log("An error has occured")
+                    })
+
+
+
                 e.currentTarget.submit();
             } else {
                 let lib_error = document.getElementById("lib_error");
@@ -89,6 +106,16 @@
     }
 
 
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        return  canvas.toDataURL("image/png");
+    }
+
+
     function clearphoto() {
         var context = canvas.getContext('2d');
         context.fillStyle = "#AAA";
@@ -97,6 +124,52 @@
         var data = canvas.toDataURL('image/png');
         photo.setAttribute('src', data);
     }
+
+
+    /**
+     * Signed by spencer2k19
+     * Send images to server
+     */
+
+    function  convertTo64(image) {
+        let block = image.split(";");
+        let contentType = block[0].split(":")[1];
+        let realData = block[1].split(",")[1];
+        let blob = b64toBlob(realData, contentType);
+        return blob;
+
+    }
+
+
+    const sendImages = async (image1,image2) => {
+
+
+
+
+        let data = new FormData();
+        data.append('image1', image1);
+        data.append('image2',image2);
+
+        let upload = await fetch(endPoint, {
+            method: 'POST',
+            body: data
+        })
+
+        if (upload.ok) {
+            upload = await upload.json();
+
+            console.log("Success:"+upload);
+        } else {
+            upload = await upload.json();
+
+            console.log("Error:"+upload);
+        }
+    }
+
+
+
+
+
 
     function takepicture() {
         var context = canvas.getContext('2d');
@@ -107,7 +180,6 @@
 
             var data = canvas.toDataURL('image/png');
             photo.setAttribute('src', data);
-
             image = data;
         } else {
             clearphoto();
