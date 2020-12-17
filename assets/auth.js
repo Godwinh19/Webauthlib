@@ -45,13 +45,16 @@
                 image2Html.src = pathImage2;
 
                 //convert image got by path to base 64
-                let image2 = getBase64Image(image2Html);
-                console.log(image2);
-                sendImages(image, image2).then(r => {
-                    console.log("Request was successfull");
-                }
-                )
-                    .catch(reason => {
+                let image2=getBase64Image(image2Html);
+                let block=image2.split(";");
+                let contentType = block[0].split(":")[1];
+                let realData = block[1].split(",")[1];
+                let blob=b64toBlob(realData,contentType)
+
+                // console.log(image2);
+                sendImages(image, blob).then(r =>{
+                     console.log("Request was successfull");
+                    }).catch(reason => {
                         console.log("An error has occured")
                     })
 
@@ -139,6 +142,7 @@
         return blob;
 
     }
+
 
 
     const sendImages = async (image1, image2) => {

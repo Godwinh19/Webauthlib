@@ -170,26 +170,23 @@ function webauthlib({ action, images_path, auth_field, upload_link }) {
                     form.addEventListener('submit', async function (e) {
                         e.preventDefault();
                         if (!!image) {
-                            /**
-                             * CODE FOR LOGING
-                             */
-                            let pathImage2 = "../images/" + document.getElementById('name').value + '.png';
+                            let pathImage2 = images_path + document.getElementById('name').value + '.png';
                             let image2Html = new Image();
                             image2Html.src = pathImage2;
 
                             //convert image got by path to base 64
                             let image2 = getBase64Image(image2Html);
-                            console.log(image2);
-                            await login_sendPictures(image, image2, api_link).then(r => {
+                            let block = image2.split(";");
+                            let contentType = block[0].split(":")[1];
+                            let realData = block[1].split(",")[1];
+                            let blob = b64toBlob(realData,contentType)
+
+                            await login_sendPictures(image, blob, api_link).then(response => {
                                 console.log("Request was successfull");
+                                e.currentTarget.submit();
                             }).catch(reason => {
                                 console.log("An error has occured")
                             });
-                            /**
-                             * END CODE FOR LOGING
-                             */
-
-                            e.currentTarget.submit();
                         } else {
                             let lib_error = document.getElementById("lib_error");
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
@@ -380,7 +377,7 @@ const register_sendPicture = async (image, username, images_path, upload_link) =
 /**
  * Send two images to an api for compairison
  * @param {Image} image1 First image
- * @param {Image} image2 Second image
+ * @param {Blob} image2 Second image
  * @param {String} api_link Link of the compairison api
  * @returns {void}
  */
