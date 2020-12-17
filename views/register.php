@@ -28,7 +28,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="nom">Nom</label>
-                                <input type="text" class="form-control" id="nom" required minlength="2">
+                                <input type="text" class="form-control" id="name" required minlength="2">
                                 <span class="form-error text-danger p-1
                                         text-hidden" style="font-size: 13px;">Invalid</span>
                             </div>
@@ -70,7 +70,7 @@
     <script>
         webauthlib({
             action: "REGISTER",
-            images_path: location.origin + "/WebAuthLib/images/",
+            images_path: "../images/",
             upload_link: location.origin + "/WebAuthLib/auth/upload.php",
             auth_field: "name"
         });

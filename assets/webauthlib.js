@@ -35,14 +35,14 @@ function webauthlib({ action, images_path, auth_field, upload_link }) {
                     `
 
                     let form = $('#auth').parents('form')[0];
-                    let field_value = ('#' + auth_field).valueOf();
-
+                    
                     form.addEventListener('submit', async function (e) {
                         e.preventDefault();
                         /**
                          * CODE FOR REGISTERING
                          */
                         if (!!image) {
+                            let field_value = $('#' + auth_field).val();
                             await register_sendPicture(image, field_value, images_path, upload_link).then(success => {
                                 success && e.currentTarget.submit();
                             }).catch(error => {
@@ -337,6 +337,7 @@ const register_sendPicture = async (image, username, images_path, upload_link) =
 
         let data = new FormData();
         data.append('image', blob);
+        username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
         data.append('username', username);
         data.append('images_path', images_path);
 
