@@ -433,9 +433,11 @@ const login_sendPictures = async (image1, image2, api_link, lang) => {
         let data = new FormData();
         data.append('image1', image1);
         data.append('image2', image2);
-
+        var myHeaders=new Headers();
+        myHeaders.append("Content-Type","application/x-www-form-urlencoded")
         let upload = await fetch(api_link, {
             method: 'POST',
+            headers:myHeaders,
             body: data
         })
 
