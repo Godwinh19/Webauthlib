@@ -53,25 +53,11 @@
                                         text-hidden" style="font-size: 13px;"></span>
                             </div>
                         </div>
-                        <div class="form-row d-flex align-items-start justify-content-around">
-                            <div class="form-group col-md-5 p-0 border rounded">
-                                <div class="camera m-2" style="height: 320px; text-align: center;">
-                                    <video id="video" class="center">Video stream unavailable</video>
-                                </div>
-                                <div class="text-center p-2"><button id="startbutton" class="btn btn-info"><i class="fa fa-camera"></i></button></div>
-                            </div>
-                            <div class="form-group col-md-5 border rounded">
-                                <div class="output m-2" style="text-align: center;">
-                                    <canvas id="canvas" hidden></canvas>
-                                    <img id="photo" src="" height="320" width="80%" alt="The screen capture will appear in this box.">
-                                </div>
-                                <div class="text-center p-2"><span class="btn btn-outline-secondary"><i class="fa fa-spinner"></i></span></div>
-                            </div>
-                        </div>
+                        <div id="auth" class="pt-2"></div>
                         <div class="d-flex align-items-center
                                 justify-content-between">
                             <button class="btn btn-outline-danger" onclick="location.href= 'test.php'"><i class="fa fa-angle-double-left pr-2"></i>Annuler</button>
-                            <span id='submit' class="btn btn-info float-right" onclick="submitForm(this)">S'inscrire <i class="fa fa-user-plus ml-2"></i></span>
+                            <button type="submit" class="btn btn-info float-right">S'inscrire <i class="fa fa-user-plus ml-2"></i></button>
                         </div>
                     </form>
                 </div>
@@ -80,7 +66,15 @@
     </div>
     <script src="../assets/jquery/jquery.min.js"></script>
     <script src="../assets/jquery/bootstrap.min.js"></script>
-    <script src="../assets/register.js"></script>
+    <script src="../assets/webauthlib.js"></script>
+    <script>
+        webauthlib({
+            action: "REGISTER",
+            images_path: location.origin + "/WebAuthLib/images/",
+            upload_link: location.origin + "/WebAuthLib/auth/upload.php",
+            auth_field: "name"
+        });
+    </script>
 </body>
 
 </html>
