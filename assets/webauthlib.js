@@ -42,7 +42,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <div class="camera m-2" style="height: 320px; text-align: center;">
                                     <video id="video" class="center">${lang === 'fr' || lang === 'FR' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                 </div>
-                                <div class="text-center p-2"><button id="startbutton" class="btn btn-secondary"><i class="fa fa-camera"></i></button></div>
+                                <div class="text-center p-2"><button id="startbutton" type='button' class="btn btn-secondary"><i class="fa fa-camera"></i></button></div>
                             </div>
                             <div class="form-group col-md-5 border rounded">
                                 <div class="output m-2" style="text-align: center;">
@@ -58,11 +58,13 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
 
                     form.addEventListener('submit', async function (e) {
                         e.preventDefault();
+                        const sub = e.currentTarget;
+
                         if (!!image) {
                             let field_value = $('#' + auth_field).val();
                             await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link, lang).then(status => {
                                 if (status.success) {
-                                    e.currentTarget.submit();
+                                    sub.submit();
                                 } else {
                                     console.log(status.message);
 
@@ -204,6 +206,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
 
                     form.addEventListener('submit', async function (e) {
                         e.preventDefault();
+                        const sub = e.currentTarget;
                         if (!!image) {
                             let link = "";
                             let tab = upload_link.split("/");
@@ -239,7 +242,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             console.log(blob2);
                             await login_sendPictures(blob1, blob2, api_link, lang).then(response => {
                                 console.log("Request was successfull");
-                                e.currentTarget.submit();
+                                sub.submit();
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
                                 let lib_error_message = document.getElementById("lib_error_message");
