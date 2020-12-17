@@ -1,4 +1,7 @@
-function webauthlib({ action, auth_field, upload_link, images_path }) {
+function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
+    if (lang === undefined || lang !== null || ['fr', 'en'].findIndex(lg => lg === lang) === -1) {
+        lang = 'en';
+    }
     switch (action) {
         case 'REGISTER':
             (function () {
@@ -17,17 +20,22 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                 function startup() {
                     let div = document.getElementById('auth');
                     div.innerHTML = `
+                        <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>${lang === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                            <span id="lib_error_message"> </span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         <div class="form-row d-flex align-items-start justify-content-around">
                             <div class="form-group col-md-5 p-0 border rounded">
                                 <div class="camera m-2" style="height: 320px; text-align: center;">
-                                    <video id="video" class="center">Video stream unavailable</video>
+                                    <video id="video" class="center">${lang === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                 </div>
-                                <div class="text-center p-2"><button id="startbutton" class="btn btn-info"><i class="fa fa-camera"></i></button></div>
+                                <div class="text-center p-2"><button id="startbutton" class="btn btn-secondary"><i class="fa fa-camera"></i></button></div>
                             </div>
                             <div class="form-group col-md-5 border rounded">
                                 <div class="output m-2" style="text-align: center;">
                                     <canvas id="canvas" hidden></canvas>
-                                    <img id="photo" src="" height="320" width="80%" alt="The screen capture will appear in this box.">
+                                    <img id="photo" src="" height="320" width="80%" alt="${lang === 'fr' ? 'La capture apparaîtra dans ce champ' : 'The screen capture will appear in this box'}">
                                 </div>
                                 <div class="text-center p-2"><span class="btn btn-outline-secondary"><i class="fa fa-spinner"></i></span></div>
                             </div>
@@ -40,13 +48,29 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                         e.preventDefault();
                         if (!!image) {
                             let field_value = $('#' + auth_field).val();
-                            await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link).then(success => {
-                                success && e.currentTarget.submit();
+                            await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link, lang).then(status => {
+                                if (status.success) {
+                                    e.currentTarget.submit();
+                                } else {
+                                    console.log(status.message);
+
+                                    let lib_error = document.getElementById("lib_error");
+                                    let lib_error_message = document.getElementById("lib_error_message");
+                                    lib_error_message.innerText = status.message;
+                                    !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
+                                }
                             }).catch(error => {
                                 console.log(error.message);
+
+                                let lib_error = document.getElementById("lib_error");
+                                let lib_error_message = document.getElementById("lib_error_message");
+                                lib_error_message.innerText = error.message;
+                                !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                             });
                         } else {
                             let lib_error = document.getElementById("lib_error");
+                            let lib_error_message = document.getElementById("lib_error_message");
+                            lib_error_message.innerText = lang === 'fr' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                         }
                     }, true);
@@ -59,14 +83,17 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                     navigator.mediaDevices.getUserMedia({
                         video: true,
                         audio: false
-                    })
-                        .then(function (stream) {
-                            video.srcObject = stream;
-                            video.play();
-                        })
-                        .catch(function (err) {
-                            console.log("An error occurred: " + err);
-                        });
+                    }).then(function (stream) {
+                        video.srcObject = stream;
+                        video.play();
+                    }).catch(function (err) {
+                        let lib_error = document.getElementById("lib_error");
+                        let lib_error_message = document.getElementById("lib_error_message");
+                        lib_error_message.innerText = lang === 'fr' ? "Une erreur s'est produite avec la caméra !" : 'An error occured with the camera !';
+                        !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
+
+                        console.log("An error occurred: " + err);
+                    });
 
                     video.addEventListener('canplay', function (ev) {
                         if (!streaming) {
@@ -141,20 +168,21 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                     let div = document.getElementById('auth');
                     div.innerHTML = `
                         <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>Attention !</strong> Image indisponible !
+                            <strong>${lang === 'fr' ? 'Attention' : 'Warning'} !</strong> 
+                            <span id="lib_error_message"> </span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <div class="form-group d-flex align-items-center justify-content-between">
                             <div class="col-lg-5">
                                 <div class="camera">
-                                    <video id="video">Video stream unavailable</video>
+                                    <video id="video">${lang === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                 </div>
                             </div>
-                            <div><button id="startbutton" class="btn btn-primary">Capturer l'empreinte</button></div>
+                            <div><button id="startbutton" class="btn btn-primary">${lang === 'fr' ? "Capturer l'empreinte" : 'Capture fingerprint'}</button></div>
                             <div class="col-lg-5">
                                 <div class="output">
                                     <canvas id="canvas"></canvas>
-                                    <img id="photo" src="" alt="The screen capture will appear in this box.">
+                                    <img id="photo" src="" alt="${lang === 'fr' ? 'La capture apparaîtra dans ce champ' : 'The screen capture will appear in this box'}">
                                 </div>
                             </div>
                         </div>
@@ -172,7 +200,8 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                             } else {
                                 link = tab.join("/") + "/";
                             }
-                            let pathImage2 = link + document.getElementById('name').value + '.png';
+
+                            let pathImage2 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
                             let image2Html = new Image();
                             image2Html.src = pathImage2;
 
@@ -183,14 +212,21 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                             let realData = block[1].split(",")[1];
                             let blob = b64toBlob(realData, contentType)
 
-                            await login_sendPictures(image, blob, api_link).then(response => {
+                            await login_sendPictures(image, blob, api_link, lang).then(response => {
                                 console.log("Request was successfull");
                                 e.currentTarget.submit();
                             }).catch(reason => {
-                                console.log("An error has occured")
+                                let lib_error = document.getElementById("lib_error");
+                                let lib_error_message = document.getElementById("lib_error_message");
+                                lib_error_message.innerText = lang === 'fr' ? "Une erreur s'est produite avec lors de l'authentification !" : 'An error occured during the authentification !';
+                                !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
+
+                                console.log(reason);
                             });
                         } else {
                             let lib_error = document.getElementById("lib_error");
+                            let lib_error_message = document.getElementById("lib_error_message");
+                            lib_error_message.innerText = lang === 'fr' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                         }
                     }, true);
@@ -203,14 +239,17 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                     navigator.mediaDevices.getUserMedia({
                         video: true,
                         audio: false
-                    })
-                        .then(function (stream) {
-                            video.srcObject = stream;
-                            video.play();
-                        })
-                        .catch(function (err) {
-                            console.log("An error occurred: " + err);
-                        });
+                    }).then(function (stream) {
+                        video.srcObject = stream;
+                        video.play();
+                    }).catch(function (err) {
+                        let lib_error = document.getElementById("lib_error");
+                        let lib_error_message = document.getElementById("lib_error_message");
+                        lib_error_message.innerText = lang === 'fr' ? "Une erreur s'est produite avec la caméra !" : 'An error occured with the camera !';
+                        !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
+
+                        console.log("An error occurred : " + err);
+                    });
 
                     video.addEventListener('canplay', function (ev) {
                         if (!streaming) {
@@ -327,7 +366,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
  * @param {String} upload_link Link of the upload.php file
  * @returns {Object}
  */
-const register_sendPicture = async (image, username, images_path, upload_link) => {
+const register_sendPicture = async (image, username, images_path, upload_link, lang) => {
     try {
         let block = image.split(";");
         let contentType = (block[0].split(":")[1]).split("/")[1]
@@ -353,21 +392,15 @@ const register_sendPicture = async (image, username, images_path, upload_link) =
             console.log(upload);
 
             if (upload.success) {
-                /**
-                 * PROBABLY SHOW ALERT OF SUCCESS ON SENDING IMAGE
-                 */
-                return;
+                return { success: true, message: lang === 'fr' ? "Envoi d'image réussie" : "Image sending succeeded" };
             } else {
-                /**
-                 * PROBABLY SHOW ALERT OF FAILURE ON SENDING IMAGE
-                 */
-                throw new Error("FAILED TO SEND IMAGE");
+                throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
             }
         } else {
             upload = await upload.json();
             console.log(upload);
 
-            throw new Error("FAILED TO SEND IMAGE");
+            throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
         }
     } catch (error) {
         console.log(error.message);
@@ -383,23 +416,34 @@ const register_sendPicture = async (image, username, images_path, upload_link) =
  * @param {String} api_link Link of the compairison api
  * @returns {void}
  */
-const login_sendPictures = async (image1, image2, api_link) => {
-    let data = new FormData();
-    data.append('image1', image1);
-    data.append('image2', image2);
+const login_sendPictures = async (image1, image2, api_link, lang) => {
+    try {
+        let data = new FormData();
+        data.append('image1', image1);
+        data.append('image2', image2);
 
-    let upload = await fetch(api_link, {
-        method: 'POST',
-        body: data
-    })
+        let upload = await fetch(api_link, {
+            method: 'POST',
+            body: data
+        })
 
-    if (upload.ok) {
-        upload = await upload.json();
+        if (upload.ok) {
+            upload = await upload.json();
+            console.log(upload);
 
-        console.log("Success : " + upload);
-    } else {
-        upload = await upload.json();
+            if (upload.success) {
+                return { success: true, message: lang === 'fr' ? "Authentificaton réussie" : "Authentication succeeded" };
+            } else {
+                throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+            }
+        } else {
+            upload = await upload.json();
+            console.log(upload);
 
-        console.log("Error : " + upload);
+            throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+        }
+    } catch (error) {
+        console.log(error.message);
+        return { success: false, message: error.message };
     }
 }

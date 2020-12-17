@@ -30,8 +30,8 @@
                         </div>
                         <div id="auth" class="pt-2"> </div>
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-info">Se connecter</button><br><br>
-                            <a href="register.php" class="p-2 btn">Ou Enregistrer vous ici.</a>
+                            <button type="submit" class="btn btn-success">Se connecter</button><br><br>
+                            <a href="register.php" class="p-1 btn">Ou Enregistrer vous ici.</a>
                         </div>
                     </form>
                 </div>
