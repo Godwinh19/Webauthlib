@@ -33,6 +33,11 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     let div = document.getElementById('auth');
                     div.innerHTML = `
                         <div class="form-row-total m-auto">
+                            <style>
+                                .text-hidden {
+                                    display: none;
+                                }
+                            </style>
                             <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
                                 <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
                                 <span id="lib_error_message"> </span>
@@ -191,6 +196,11 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     let div = document.getElementById('auth');
                     div.innerHTML = `
                         <div class="form-row-total m-auto">
+                            <style>
+                                .text-hidden {
+                                    display: none;
+                                }
+                            </style>
                             <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
                                 <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
                                 <span id="lib_error_message"> </span>
