@@ -9,7 +9,7 @@
     var canvas = null;
     var photo = null;
     var startbutton = null;
-    var endPoint="http://localhost:8000"
+    var endPoint = "http://localhost:8000"
 
     image = null;
 
@@ -35,21 +35,21 @@
                 </div>
             </div>
         `
-        let form =$('#auth').parents('form')[0];
+        let form = $('#auth').parents('form')[0];
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             if (!!image) {
-                let pathImage2="../images/"+document.getElementById('name').value+'.png';
-                let image2Html=new Image();
-                image2Html.src=pathImage2;
+                let pathImage2 = "../images/" + document.getElementById('name').value + '.png';
+                let image2Html = new Image();
+                image2Html.src = pathImage2;
 
                 //convert image got by path to base 64
-                let image2=getBase64Image(image2Html);
+                let image2 = getBase64Image(image2Html);
                 console.log(image2);
-                sendImages(image, image2).then(r =>{
-                     console.log("Request was successfull");
-                    }
+                sendImages(image, image2).then(r => {
+                    console.log("Request was successfull");
+                }
                 )
                     .catch(reason => {
                         console.log("An error has occured")
@@ -112,7 +112,7 @@
         canvas.height = img.height;
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0);
-        return  canvas.toDataURL("image/png");
+        return canvas.toDataURL("image/png");
     }
 
 
@@ -131,7 +131,7 @@
      * Send images to server
      */
 
-    function  convertTo64(image) {
+    function convertTo64(image) {
         let block = image.split(";");
         let contentType = block[0].split(":")[1];
         let realData = block[1].split(",")[1];
@@ -141,14 +141,10 @@
     }
 
 
-    const sendImages = async (image1,image2) => {
-
-
-
-
+    const sendImages = async (image1, image2) => {
         let data = new FormData();
         data.append('image1', image1);
-        data.append('image2',image2);
+        data.append('image2', image2);
 
         let upload = await fetch(endPoint, {
             method: 'POST',
@@ -158,18 +154,13 @@
         if (upload.ok) {
             upload = await upload.json();
 
-            console.log("Success:"+upload);
+            console.log("Success:" + upload);
         } else {
             upload = await upload.json();
 
-            console.log("Error:"+upload);
+            console.log("Error:" + upload);
         }
     }
-
-
-
-
-
 
     function takepicture() {
         var context = canvas.getContext('2d');
