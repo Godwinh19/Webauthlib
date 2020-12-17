@@ -46,8 +46,13 @@
 
                 //convert image got by path to base 64
                 let image2=getBase64Image(image2Html);
-                console.log(image2);
-                sendImages(image, image2).then(r =>{
+                let block=image2.split(";");
+                let contentType = block[0].split(":")[1];
+                let realData = block[1].split(",")[1];
+                let blob=b64toBlob(realData,contentType)
+
+                // console.log(image2);
+                sendImages(image, blob).then(r =>{
                      console.log("Request was successfull");
                     }
                 )
@@ -143,12 +148,13 @@
 
     const sendImages = async (image1,image2) => {
 
+        //image1
 
 
 
         let data = new FormData();
-        data.append('image1', image1);
-        data.append('image2',image2);
+        data.append("image",image1);
+        data.append('image2', image2);
 
         let upload = await fetch(endPoint, {
             method: 'POST',
