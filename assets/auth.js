@@ -9,6 +9,7 @@
     var canvas = null;
     var photo = null;
     var startbutton = null;
+    var uploadLink = "http://localhost/webauthlib/auth/upload.php";
 
     image = null;
 
@@ -34,7 +35,7 @@
                 </div>
             </div>
         `
-        let form = document.querySelector('#' + div.getAttribute('form'));
+        let form =$('#auth').parents('form')[0];
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -124,7 +125,7 @@
         data.append('image', blob);
         console.log(blob);
 
-        let upload = await fetch('http://localhost/Webauthapi/public/api/upload', {
+        let upload = await fetch(uploadLink, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json'
