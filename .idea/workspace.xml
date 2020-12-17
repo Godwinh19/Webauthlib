@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad3b0e95-52e3-4a26-ab1e-cc70a8ab3033" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/webauthlib.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/register.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/register.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webauthlib.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/webauthlib.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/test.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +87,7 @@
       <workItem from="1607673139771" duration="4916000" />
       <workItem from="1608109768139" duration="1740000" />
       <workItem from="1608195609543" duration="823000" />
-      <workItem from="1608196566446" duration="8138000" />
+      <workItem from="1608196566446" duration="8907000" />
     </task>
     <servers />
   </component>

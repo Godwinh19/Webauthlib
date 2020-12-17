@@ -47,7 +47,7 @@
     <script>
         webauthlib({
             action: "LOGIN",
-            images_path: location.origin + "/WebAuthLib/images/",
+            images_path: "../images/",
             upload_link: location.origin + "/WebAuthLib/auth/upload.php",
             auth_field: "name"
         });
