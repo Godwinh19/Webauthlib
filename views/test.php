@@ -28,39 +28,29 @@
                         <div class="form-group">
                             <input type="text" class="form-control" id="name" placeholder="Enter your name">
                         </div>
-                        <div id="auth" class="pt-2" form="formulaire"> </div>
+                        <div id="auth" class="pt-2"> </div>
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-info">Se connecter</button><br><br>
                             <a href="register.php" class="p-2 btn">Ou Enregistrer vous ici.</a>
                         </div>
                     </form>
-
-
-                    <!--<div class="form-group d-flex align-items-center justify-content-between">
-                        <div class="col-lg-5">
-                            <div class="camera">
-                                <video id="video">Video stream unavailable</video>
-                            </div>
-                            <div><button id="startbutton" class="btn">Take photo</button></div>
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="output">
-                                <canvas id="canvas"></canvas>
-                                <img id="photo" src="../assets/tmp.jpg" alt="The screen capture will appear in this box.">
-                                <div><button id="send">Send</button></div>
-                            </div>
-                        </div>
-                    </div>-->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- <script src="../assets/jquery/jquery.min.js"></script> -->
+    <script src="../assets/jquery/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
-    <script src="../assets/auth.js"></script>
+    <script src="../assets/webauthlib.js"></script>
+    <script>
+        webauthlib({
+            action: "LOGIN",
+            images_path: location.origin + "/WebAuthLib/images/",
+            auth_field: "name"
+        });
+    </script>
 </body>
 
 </html>
