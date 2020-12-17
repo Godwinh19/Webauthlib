@@ -173,7 +173,6 @@ function webauthlib({ action, auth_field, upload_link, images_path }) {
                                 link = tab.join("/") + "/";
                             }
                             let pathImage2 = link + document.getElementById('name').value + '.png';
-                            alert(pathImage2);
                             let image2Html = new Image();
                             image2Html.src = pathImage2;
 
