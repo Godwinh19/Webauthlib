@@ -1,4 +1,4 @@
-function webauthlib({ action, images_path, auth_field, upload_link }) {
+function webauthlib({ action, auth_field, upload_link, images_path }) {
     switch (action) {
         case 'REGISTER':
             (function () {
@@ -35,15 +35,12 @@ function webauthlib({ action, images_path, auth_field, upload_link }) {
                     `
 
                     let form = $('#auth').parents('form')[0];
-                    
+
                     form.addEventListener('submit', async function (e) {
                         e.preventDefault();
-                        /**
-                         * CODE FOR REGISTERING
-                         */
                         if (!!image) {
                             let field_value = $('#' + auth_field).val();
-                            await register_sendPicture(image, field_value, images_path, upload_link).then(success => {
+                            await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link).then(success => {
                                 success && e.currentTarget.submit();
                             }).catch(error => {
                                 console.log(error.message);
@@ -52,9 +49,6 @@ function webauthlib({ action, images_path, auth_field, upload_link }) {
                             let lib_error = document.getElementById("lib_error");
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                         }
-                        /**
-                         * END CODE FOR REGISTERING
-                         */
                     }, true);
 
                     video = document.getElementById('video');
@@ -170,7 +164,16 @@ function webauthlib({ action, images_path, auth_field, upload_link }) {
                     form.addEventListener('submit', async function (e) {
                         e.preventDefault();
                         if (!!image) {
-                            let pathImage2 = images_path + document.getElementById('name').value + '.png';
+                            let link = "";
+                            let tab = upload_link.split("/");
+                            tab = tab.slice(0, tab.length - 1);
+                            if (!!images_path && images_path.length > 0) {
+                                link = tab.join("/") + "/" + images_path;
+                            } else {
+                                link = tab.join("/") + "/";
+                            }
+                            let pathImage2 = link + document.getElementById('name').value + '.png';
+                            alert(pathImage2);
                             let image2Html = new Image();
                             image2Html.src = pathImage2;
 
@@ -179,7 +182,7 @@ function webauthlib({ action, images_path, auth_field, upload_link }) {
                             let block = image2.split(";");
                             let contentType = block[0].split(":")[1];
                             let realData = block[1].split(",")[1];
-                            let blob = b64toBlob(realData,contentType)
+                            let blob = b64toBlob(realData, contentType)
 
                             await login_sendPictures(image, blob, api_link).then(response => {
                                 console.log("Request was successfull");
