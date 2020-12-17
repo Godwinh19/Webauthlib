@@ -121,7 +121,10 @@ const sendPicture = async (image, inputs, btn) => {
 
     let data = new FormData();
     data.append('image', blob);
-    data.append('user', JSON.stringify(inputs));
+    let imgDir = '../images/';
+    let user = inputs.email.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
+    data.append('imgDir', imgDir); // image directory on client's server
+    data.append('user', user);  // unique input value
     
     let upload = await fetch(location.origin + '/'+ window.ROOT +'/auth/upload.php', {
         method: 'POST',
