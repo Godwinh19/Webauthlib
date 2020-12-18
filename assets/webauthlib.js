@@ -5,12 +5,14 @@
  * All rights reserved
  * @param {String} action Action name "REGISTER" | "LOGIN"
  * @param {String} auth_field Field in the form that hold value for naming images
- * @param {String} upload_link Link where is located the upload.php file attached to the library
+ * @param {String} upload_link Link where is located the webauthlib.php file attached to the library
  * @param {String} images_path Path of the folder that hold all users fingerprints images
+ * @param {String} images_path_tmp Path of temporary images folder from webauthlib.php folder as specified for images_path
  * @param {String} lang "en" Langage of usage of the library "en" | "fr" | "EN" | "FR"
+ * @param {Boolean} fcolumn "false" Align the cards by flex direction column
  * @returns {void}
  */
-function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
+function webauthlib({ action, auth_field, upload_link, images_path, images_path_tmp, lang, fcolumn }) {
     if (lang === undefined || lang === null || ['fr', 'en', 'FR', 'EN'].findIndex(lg => lg === lang) === -1) {
         lang = 'en';
     }
@@ -44,19 +46,19 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <span id="lib_error_message"> </span>
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
-                            <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
-                                <div class="col-md-5">
+                            <div class="row col-md-12 text-center m-auto d-flex flex-${!!fcolumn ? 'column' : 'row'} justify-content-between align-items-center">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto" style="width: 20rem;">
                                         <div class="camera">
                                             <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                         </div>
                                         <div class="card-body text-center">
                                             <h3 class="card-title">${lang.toLowerCase() === 'fr' ? 'Caméra' : 'Camera'}</h3>
-                                            <div><button id="startbutton" class="btn btn-success">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
+                                            <div><button id="startbutton" class="btn btn-secondary">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-md-5">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto h-auto" style="width: 20rem;">
                                         <div class="output">
                                             <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
@@ -78,7 +80,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             let field_value = $('#' + auth_field).val();
                             await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link, lang).then(status => {
                                 if (status.success) {
-                                    sub.submit();
+                                    // sub.submit();
                                 } else {
                                     console.log(status.message);
 
@@ -189,7 +191,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                 var canvas = null;
                 var photo = null;
                 var startbutton = null;
-                var api_link = "192.168.8.111:5000";
+                var api_link = "http://192.168.8.103:5000";
 
                 image = null;
 
@@ -207,19 +209,19 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <span id="lib_error_message"> </span>
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
-                            <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
-                                <div class="col-md-5">
+                            <div class="row col-md-12 text-center m-auto d-flex flex-${!!fcolumn ? 'column' : 'row'} justify-content-between align-items-center">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto" style="width: 20rem;">
                                         <div class="camera">
                                             <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                         </div>
                                         <div class="card-body text-center">
                                             <h3 class="card-title">${lang.toLowerCase() === 'fr' ? 'Caméra' : 'Camera'}</h3>
-                                            <div><button id="startbutton" class="btn btn-success">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
+                                            <div><button id="startbutton" class="btn btn-secondary">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-md-5">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto h-auto" style="width: 20rem;">
                                         <div class="output">
                                             <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
@@ -246,32 +248,17 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 link = tab.join("/") + "/";
                             }
 
-                            let pathImage2 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
-                            let image2Html = new Image();
-                            image2Html.src = pathImage2;
+                            let pathImage1 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
 
-                            //convert image got by path to base 64
-                            //blob1
                             let block = image.split(";");
-                            let contentType = block[0].split(":")[1];
+                            let contentType = (block[0].split(":")[1]).split("/")[1];
                             let realData = block[1].split(",")[1];
-                            let blob1 = b64toBlob(realData, contentType)
+                            let blob_image_2 = b64toBlob(realData, contentType);
 
-
-
-
-                            //blob2
-                            let image2 = getBase64Image(image2Html);
-                            block = image2.split(";");
-                            contentType = block[0].split(":")[1];
-                            realData = block[1].split(",")[1];
-                            let blob2 = b64toBlob(realData, contentType)
-
-                            console.log(blob1);
-                            console.log(blob2);
-                            await login_sendPictures(blob1, blob2, api_link, lang).then(response => {
+                            await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, images_path_tmp, lang).then(response => {
                                 console.log("Request was successfull");
-                                sub.submit();
+                                console.log(response);
+                                // sub.submit();
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
                                 let lib_error_message = document.getElementById("lib_error_message");
@@ -420,7 +407,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
  * @param {Blob} image Image to send for registering
  * @param {String} username Username, the name to attach to the image for authentification
  * @param {String} images_path Local path where to save the images
- * @param {String} upload_link Link of the upload.php file
+ * @param {String} upload_link Link of the webauthlib.php file
  * @returns {Object}
  */
 const register_sendPicture = async (image, username, images_path, upload_link, lang) => {
@@ -431,6 +418,7 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
         let blob = b64toBlob(realData, contentType);
 
         let data = new FormData();
+        data.append('action', 'SAVE_IMAGE');
         data.append('image', blob);
         username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
         data.append('username', username);
@@ -454,7 +442,6 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
                 throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
             }
         } else {
-            upload = await upload.json();
             console.log(upload);
 
             throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
@@ -468,41 +455,128 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
 
 /**
  * Send two images to an api for compairison
- * @param {Blob} blob1 First image
- * @param {Blob} blob2 Second image
+ * @param {String} pathImage1 First image
+ * @param {Blob} blob Second image
+ * @param {String} username Authentication field value
  * @param {String} api_link Link of the compairison api
+ * @param {String} upload_link Link of webauthlib.php file
+ * @param {String} images_path_tmp Folder of temporary images
+ * @param {String} lang Langage token
  * @returns {void}
  */
-const login_sendPictures = async (blob1, blob2, api_link, lang) => {
+const login_sendPictures = async (pathImage1, blob, username, api_link, upload_link, images_path_tmp, lang) => {
     try {
-        let data = new FormData();
-        data.append('image1', blob1);
-        data.append('image2', blob2);
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded")
-        let upload = await fetch(api_link, {
+        //1-save image taken to tmp directory
+        let data_tmp = new FormData();
+        data_tmp.append('action', 'SAVE_TMP_IMAGE');
+        data_tmp.append('image_tmp', blob);
+        data_tmp.append('username', username);
+        data_tmp.append('images_path', images_path_tmp);
+
+        let upload_tmp = await fetch(upload_link, {
             method: 'POST',
-            headers: myHeaders,
-            body: data
-        })
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: data_tmp
+        });
 
-        if (upload.ok) {
-            upload = await upload.json();
-            console.log(upload);
+        if (upload_tmp.ok) {
+            upload_tmp = await upload_tmp.json();
+            console.log(upload_tmp);
 
-            if (upload.success) {
-                return { success: true, message: lang.toLowerCase() === 'fr' ? "Authentificaton réussie" : "Authentication succeeded" };
+            if (upload_tmp.success) {
+                //2-call for API to handling images
+                let pathImage2 = "";
+                let tab = upload_link.split("/");
+                tab = tab.slice(0, tab.length - 1);
+                pathImage2 = tab.join("/") + "/" + upload_tmp.data.url;
+
+                let data = new FormData();
+                console.log(pathImage1);
+                console.log(pathImage2);
+                data.append('image1', pathImage1);
+                data.append('image2', pathImage2);
+
+                let upload = await fetch(api_link, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: data
+                });
+
+                if (upload.ok) {
+                    upload = await upload.json();
+                    console.log(upload);
+
+                    //deleting tmp images folders
+                    await deleteImagesFolder(upload_link, images_path_tmp, lang);
+
+                    if (upload.success) {
+                        return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
+                    } else {
+                        throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                    }
+                } else {
+                    upload = await upload.json();
+                    console.log(upload);
+
+                    throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                }
             } else {
-                throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
             }
         } else {
-            upload = await upload.json();
-            console.log(upload);
+            upload_tmp = await upload_tmp.json();
+            console.log(upload_tmp);
 
-            throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+            throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
         }
     } catch (error) {
         console.log(error.message);
         return { success: false, message: lang.toLowerCase() === 'fr' ? "Veuillez  vérifier les permissions du dossier des images !" : "Please, verify the images folder permissions !" };
+    }
+}
+
+
+
+/**
+ * Delete tmp images from the tmp folder
+ * @param {String} upload_link Link of webauthlib.php file
+ * @param {String} images_path_tmp Temporary files folder
+ * @param {String} lang Language token
+ * @returns {void}
+ */
+const deleteImagesFolder = async (upload_link, images_path_tmp, lang) => {
+    try {
+        let data = new FormData();
+        data.append('action', 'REMOVE_TMP_IMAGE');
+        data.append("path_dir", images_path_tmp);
+
+        let remove = await fetch(upload_link, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: data
+        });
+
+        if (remove.ok) {
+            remove = await remove.json();
+            console.log(remove);
+
+            if (remove.success) {
+                return { success: true, message: lang.toLowerCase() === 'fr' ? "Suppression réussie" : "Delete succeed" };
+            } else {
+                throw new Error(lang.toLowerCase() === 'fr' ? "Échec de suppresion" : "Delete operation failed");
+            }
+        } else {
+            console.log(remove);
+            throw new Error(lang.toLowerCase() === 'fr' ? "Échec de suppresion" : "Delete operation failed");
+        }
+    } catch (error) {
+        console.log(error.message);
+        return { success: false, message: error.message };
     }
 }
