@@ -7,11 +7,12 @@
  * @param {String} auth_field Field in the form that hold value for naming images
  * @param {String} upload_link Link where is located the upload.php file attached to the library
  * @param {String} images_path Path of the folder that hold all users fingerprints images
+ * @param {String} images_path_tmp Path of temporary images folder from upload.php folder as specified for images_path
  * @param {String} lang "en" Langage of usage of the library "en" | "fr" | "EN" | "FR"
  * @param {Boolean} fcolumn "false" Align the cards by flex direction column
  * @returns {void}
  */
-function webauthlib({ action, auth_field, upload_link, images_path, lang, fcolumn }) {
+function webauthlib({ action, auth_field, upload_link, images_path, images_path_tmp, lang, fcolumn }) {
     if (lang === undefined || lang === null || ['fr', 'en', 'FR', 'EN'].findIndex(lg => lg === lang) === -1) {
         lang = 'en';
     }
@@ -248,29 +249,16 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang, fcolum
                             }
 
                             let pathImage1 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
-                            // console.log(pathImage1);
-                            // let image2Html = new Image();
-                            // image2Html.src = pathImage1;
 
-                            //convert image got by path to base 64
-                            //blob1
                             let block = image.split(";");
                             let contentType = block[0].split(":")[1];
                             let realData = block[1].split(",")[1];
-                            let blob_image_2 = b64toBlob(realData, contentType)
+                            let blob_image_2 = b64toBlob(realData, contentType);
 
-
-                            //blob2
-                            // let image2 = getBase64Image(image2Html);
-                            //  block = image2.split(";");
-                            //  contentType = block[0].split(":")[1];
-                            //  realData = block[1].split(",")[1];
-                            // let blob2 = b64toBlob(realData, contentType)
-
-                            await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, lang).then(response => {
+                            await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, images_path_tmp, lang).then(response => {
                                 console.log("Request was successfull");
-                                console.log(response)
-                                sub.submit();
+                                console.log(response);
+                                // sub.submit();
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
                                 let lib_error_message = document.getElementById("lib_error_message");
@@ -428,7 +416,9 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
         let contentType = (block[0].split(":")[1]).split("/")[1]
         let realData = block[1].split(",")[1];
         let blob = b64toBlob(realData, contentType);
+
         let data = new FormData();
+        data.append('action', 'SAVE_IMAGE');
         data.append('image', blob);
         username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
         data.append('username', username);
@@ -452,7 +442,6 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
                 throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
             }
         } else {
-            upload = await upload.json();
             console.log(upload);
 
             throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
@@ -468,23 +457,23 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
  * Send two images to an api for compairison
  * @param {String} pathImage1 First image
  * @param {Blob} blob Second image
- * @param {String} username
+ * @param {String} username Authentication field value
  * @param {String} api_link Link of the compairison api
- * @param upload_tmp_link
- * @param lang
+ * @param {String} upload_link Link of upload.php file
+ * @param {String} images_path_tmp Folder of temporary images
+ * @param {String} lang Langage token
  * @returns {void}
  */
-const login_sendPictures = async (pathImage1, blob, username, api_link, upload_tmp_link, lang) => {
+const login_sendPictures = async (pathImage1, blob, username, api_link, upload_link, images_path_tmp, lang) => {
     try {
         //1-save image taken to tmp directory
-        username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
-        let images_path_tmp = "images_tmp/"
         let data_tmp = new FormData();
+        data_tmp.append('action', 'SAVE_TMP_IMAGE');
         data_tmp.append('image_tmp', blob);
         data_tmp.append('username', username);
         data_tmp.append('images_path', images_path_tmp);
 
-        let upload_tmp = await fetch(upload_tmp_link, {
+        let upload_tmp = await fetch(upload_link, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json'
@@ -498,7 +487,10 @@ const login_sendPictures = async (pathImage1, blob, username, api_link, upload_t
 
             if (upload_tmp.success) {
                 //2-call for API to handling images
-                let pathImage2 = location.origin + "/WebAuthLib/webauth/" + upload_tmp.data.url
+                let pathImage2 = "";
+                let tab = upload_link.split("/");
+                tab = tab.slice(0, tab.length - 1);
+                pathImage2 = tab.join("/") + "/" + upload_tmp.data.url;
 
                 let data = new FormData();
                 console.log(pathImage1);
@@ -514,12 +506,12 @@ const login_sendPictures = async (pathImage1, blob, username, api_link, upload_t
                     body: data
                 });
 
-
                 if (upload.ok) {
-                    await deleteImagesFolder();
                     upload = await upload.json();
                     console.log(upload);
+
                     //deleting tmp images folders
+                    await deleteImagesFolder(upload_link, images_path_tmp, lang);
 
                     if (upload.success) {
                         return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
@@ -551,21 +543,40 @@ const login_sendPictures = async (pathImage1, blob, username, api_link, upload_t
 
 /**
  * Delete tmp images from the tmp folder
+ * @param {String} upload_link Link of upload.php file
+ * @param {String} images_path_tmp Temporary files folder
+ * @param {String} lang Language token
  * @returns {void}
  */
-const deleteImagesFolder = async () => {
-    let data = new FormData();
-    data.append("path_dir", "images_tmp/")
+const deleteImagesFolder = async (upload_link, images_path_tmp, lang) => {
+    try {
+        let data = new FormData();
+        data.append('action', 'REMOVE_TMP_IMAGE');
+        data.append("path_dir", images_path_tmp);
 
-    let upload = await fetch(location.origin + "/WebAuthLib/webauth/remove_tampon.php", {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json'
-        },
-        body: data
-    })
+        let remove = await fetch(upload_link, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: data
+        });
 
-    if (upload.ok) {
-        upload = await upload.json();
+        if (remove.ok) {
+            remove = await remove.json();
+            console.log(remove);
+
+            if (remove.success) {
+                return { success: true, message: lang.toLowerCase() === 'fr' ? "Suppression réussie" : "Delete succeed" };
+            } else {
+                throw new Error(lang.toLowerCase() === 'fr' ? "Échec de suppresion" : "Delete operation failed");
+            }
+        } else {
+            console.log(remove);
+            throw new Error(lang.toLowerCase() === 'fr' ? "Échec de suppresion" : "Delete operation failed");
+        }
+    } catch (error) {
+        console.log(error.message);
+        return { success: false, message: error.message };
     }
 }
