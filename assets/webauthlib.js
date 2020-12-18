@@ -82,7 +82,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                                 if (status.success) {
                                     setTimeout(() => {
                                         sub.submit();
-                                    }, 1500);
+                                    }, 2000);
                                 } else {
                                     console.log(status.message);
 
@@ -193,7 +193,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                 var canvas = null;
                 var photo = null;
                 var startbutton = null;
-                var api_link = "http://192.168.8.103:5000";
+                var api_link = "http://172.20.10.5:5000";
 
                 image = null;
 
@@ -258,11 +258,16 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                             let blob_image_2 = b64toBlob(realData, contentType);
 
                             await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, images_path_tmp, lang).then(response => {
-                                console.log("Request was successfull");
-                                console.log(response);
-                                setTimeout(() => {
-                                    sub.submit();
-                                }, 1500);
+                                if (response.success) {
+                                    setTimeout(() => {
+                                        sub.submit();
+                                    }, 2000);
+                                } else {
+                                    let lib_error = document.getElementById("lib_error");
+                                    let lib_error_message = document.getElementById("lib_error_message");
+                                    lib_error_message.innerText = response.message;
+                                    !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
+                                }
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
                                 let lib_error_message = document.getElementById("lib_error_message");
@@ -518,31 +523,34 @@ const login_sendPictures = async (pathImage1, blob, username, api_link, upload_l
                     await deleteImagesFolder(upload_link, images_path_tmp, lang);
 
                     if (upload.success) {
-                        return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
+                        if (upload.data.authenticated) {
+                            return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
+                        } else {
+                            throw new Error(lang === 'fr' ? "Incohérence d'empreintes digitales" : "Fingerprint inconsistency");
+                        }
                     } else {
-                        throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                        throw new Error(lang === 'fr' ? "Échec d'authentification" : "Authentication failed");
                     }
                 } else {
                     upload = await upload.json();
                     console.log(upload);
 
-                    throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                    throw new Error(lang === 'fr' ? "Échec d'authentification" : "Authentication failed");
                 }
             } else {
-                throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
+                throw new Error(lang === 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
             }
         } else {
             upload_tmp = await upload_tmp.json();
             console.log(upload_tmp);
 
-            throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
+            throw new Error(lang === 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
         }
     } catch (error) {
         console.log(error.message);
-        return { success: false, message: lang.toLowerCase() === 'fr' ? "Veuillez  vérifier les permissions du dossier des images !" : "Please, verify the images folder permissions !" };
+        return { success: false, message: error.message };
     }
 }
-
 
 
 /**
