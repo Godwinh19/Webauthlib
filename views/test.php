@@ -48,7 +48,7 @@
             action: "LOGIN",
             images_path: "images/",
             images_path_tmp: "tmp/",
-            upload_link: location.origin + "/WebAuthLib/webauth/webauthlib.php",
+            upload_link: "http://172.20.10.4/WebAuthLib/webauth/webauthlib.php",
             auth_field: "name",
             lang: 'fr'
         });
