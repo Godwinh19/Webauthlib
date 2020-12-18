@@ -41,7 +41,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                                 }
                             </style>
                             <div id="lib_success" class="text-hidden alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                                <strong>${lang.toLowerCase() === 'fr' ? 'Félicitations' : 'Congratulations'} !</strong>
                                 <span id="lib_success_message"> </span>
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_success').classList.add('text-hidden')"></button>
                             </div>
@@ -217,7 +217,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                                 }
                             </style>
                             <div id="lib_success" class="text-hidden alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                                <strong>${lang.toLowerCase() === 'fr' ? 'Félicitations' : 'Congratulations'} !</strong>
                                 <span id="lib_success_message"> </span>
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_success').classList.add('text-hidden')"></button>
                             </div>
