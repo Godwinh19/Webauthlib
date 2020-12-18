@@ -9,11 +9,13 @@ if (isset($_FILES['image']) && isset($_POST['username']) && isset($_POST['images
     $is_image = getimagesize($_FILES['image']['tmp_name']);
 
     if ($is_image) {
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file))
+        {
             $data['data']['image'] = $username . '.' . $_FILES['image']['type'];
             $data['data']['url'] = $images_path . $data['data']['image'];
             $data['success'] = true;
-        } else {
+        }
+        else {
             $data['message'] = 'ERROR_ON_UPLOADING_IMAGE';
         }
     } else {

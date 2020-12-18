@@ -48,7 +48,7 @@
         webauthlib({
             action: "LOGIN",
             images_path: "images/",
-            upload_link: location.origin + "/Webauthlib/webauth/upload.php",
+            upload_link: location.origin + "/WebAuthLib/webauth/save_tampon.php",
             auth_field: "name",
             lang: 'en'
         });

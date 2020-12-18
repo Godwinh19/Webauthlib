@@ -72,7 +72,7 @@
         webauthlib({
             action: "REGISTER",
             images_path: "images/",
-            upload_link: location.origin + "/Webauthlib/webauth/upload.php",
+            upload_link: location.origin + "/WebAuthLib/webauth/upload.php",
             auth_field: "name",
             lang: 'fr'
         });

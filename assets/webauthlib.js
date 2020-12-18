@@ -217,31 +217,29 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 link = tab.join("/") + "/";
                             }
 
-                            let pathImage2 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
-                            let image2Html = new Image();
-                            image2Html.src = pathImage2;
+                            let pathImage1 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
+                            // console.log(pathImage1);
+                            // let image2Html = new Image();
+                            // image2Html.src = pathImage1;
 
                             //convert image got by path to base 64
                             //blob1
                             let block=image.split(";");
                             let contentType=block[0].split(":")[1];
                             let realData=block[1].split(",")[1];
-                            let blob1=b64toBlob(realData,contentType)
-
-
+                            let blob_image_2=b64toBlob(realData,contentType)
 
 
                             //blob2
-                            let image2 = getBase64Image(image2Html);
-                             block = image2.split(";");
-                             contentType = block[0].split(":")[1];
-                             realData = block[1].split(",")[1];
-                            let blob2 = b64toBlob(realData, contentType)
+                            // let image2 = getBase64Image(image2Html);
+                            //  block = image2.split(";");
+                            //  contentType = block[0].split(":")[1];
+                            //  realData = block[1].split(",")[1];
+                            // let blob2 = b64toBlob(realData, contentType)
 
-                            console.log(blob1);
-                            console.log(blob2);
-                            await login_sendPictures(blob1, blob2, api_link, lang).then(response => {
+                            await login_sendPictures(pathImage1, blob_image_2,document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") ,api_link,upload_link, lang).then(response => {
                                 console.log("Request was successfull");
+                                console.log(response)
                                 sub.submit();
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
@@ -400,7 +398,6 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
         let contentType = (block[0].split(":")[1]).split("/")[1]
         let realData = block[1].split(",")[1];
         let blob = b64toBlob(realData, contentType);
-
         let data = new FormData();
         data.append('image', blob);
         username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
@@ -439,41 +436,127 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
 
 /**
  * Send two images to an api for compairison
- * @param {Blob} blob1 First image
- * @param {Blob} blob2 Second image
+ * @param {String} pathImage1 First image
+ * @param {Blob} blob Second image
+ * @param {String} username
  * @param {String} api_link Link of the compairison api
+ * @param upload_tmp_link
+ * @param lang
  * @returns {void}
  */
-const login_sendPictures = async (blob1, blob2, api_link, lang) => {
+const login_sendPictures = async (pathImage1, blob, username,api_link,upload_tmp_link, lang) => {
     try {
-        let data = new FormData();
-        data.append('image1', blob1);
-        data.append('image2', blob2);
-        var myHeaders=new Headers();
-        myHeaders.append("Content-Type","application/x-www-form-urlencoded")
-        let upload = await fetch(api_link, {
+
+        //1-save image taken to tmp directory
+        username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
+        let images_path_tmp="images_tmp/"
+        let data_tmp = new FormData();
+        data_tmp.append('image_tmp', blob);
+        data_tmp.append('username', username);
+        data_tmp.append('images_path', images_path_tmp);
+
+        let upload_tmp = await fetch(upload_tmp_link, {
             method: 'POST',
-            headers:myHeaders,
-            body: data
-        })
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: data_tmp
+        });
 
-        if (upload.ok) {
-            upload = await upload.json();
-            console.log(upload);
+        if (upload_tmp.ok) {
+            upload_tmp = await upload_tmp.json();
+            console.log(upload_tmp);
 
-            if (upload.success) {
-                return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
+            if (upload_tmp.success) {
+
+
+                //2-call for API to handling images
+                let pathImage2=location.origin + "/WebAuthLib/webauth/"+upload_tmp.data.url
+
+                let data = new FormData();
+                console.log(pathImage1);
+                console.log(pathImage2);
+                data.append('image1', pathImage1);
+                data.append('image2', pathImage2);
+
+                let upload = await fetch(api_link, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: data
+                })
+
+
+                if (upload.ok) {
+                    await  deleteImagesFolder();
+                    upload = await upload.json();
+                    console.log(upload);
+                    //deleting tmp images folders
+
+
+
+                    if (upload.success) {
+                        return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
+                    } else {
+                        throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                    }
+                } else {
+                    upload = await upload.json();
+                    console.log(upload);
+
+                    throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                }
+
+
+
+
+
+
+
             } else {
-                throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+                throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
             }
         } else {
-            upload = await upload.json();
-            console.log(upload);
+            upload_tmp = await upload_tmp.json();
+            console.log(upload_tmp);
 
-            throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
+            throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
         }
+
+
+
+
     } catch (error) {
         console.log(error.message);
         return { success: false, message: error.message };
     }
 }
+
+
+
+
+const deleteImagesFolder = async ()=>
+{
+    let data = new FormData();
+    data.append("path_dir","images_tmp/")
+
+    let upload = await fetch(location.origin + "/WebAuthLib/webauth/remove_tampon.php", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        },
+        body: data
+    })
+
+    if (upload.ok) {
+        upload = await upload.json();
+
+    }
+
+
+
+
+
+
+    }
