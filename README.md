@@ -44,4 +44,4 @@ The library uses bootstrap 5 and jquery. You can use a CDN if wanted.
     ```
 
 ## About
-RII5, EPAC 2020-2021, All rights reserved &amp;copy
+RII5, EPAC 2020-2021, All rights reserved
