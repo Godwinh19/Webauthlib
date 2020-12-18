@@ -206,6 +206,11 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                                     display: none;
                                 }
                             </style>
+                            <div id="lib_success" class="text-hidden alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                                <span id="lib_success_message"> </span>
+                                <button type="button" class="btn-close" onclick="document.getElementById('lib_success').classList.add('text-hidden')"></button>
+                            </div>
                             <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
                                 <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
                                 <span id="lib_error_message"> </span>
@@ -259,6 +264,11 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
 
                             await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, images_path_tmp, lang).then(response => {
                                 if (response.success) {
+                                    let lib_success = document.getElementById("lib_success");
+                                    let lib_success_message = document.getElementById("lib_success_message");
+                                    lib_success_message.innerText = lang.toLowerCase() === 'fr' ? "Authentification réussie" : "Authentication failed";
+                                    !!lib_success && lib_success.classList.contains("text-hidden") && lib_success.classList.remove("text-hidden");
+
                                     setTimeout(() => {
                                         sub.submit();
                                     }, 2000);
