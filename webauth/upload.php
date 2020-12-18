@@ -29,15 +29,13 @@ if (isset($_POST['action']) && strlen($_POST['action']) > 0) {
             if (isset($_FILES['image_tmp'])) {
                 $username = $_POST['username'];
                 $images_path = $_POST['images_path'];
-                $ext = explode("/", $_FILES['image_tmp']['type'])[1];
-                $target_file = $images_path . $username . '.' . $ext;
-
+                $target_file = $images_path . $username . '.' . $_FILES['image_tmp']['type'];
                 $file_type = $_FILES['image_tmp']['type'];
                 $is_image = getimagesize($_FILES['image_tmp']['tmp_name']);
 
                 if ($is_image) {
                     if (move_uploaded_file($_FILES['image_tmp']['tmp_name'], $target_file)) {
-                        $data['data']['image_tmp'] = $username . '.' . $ext;
+                        $data['data']['image_tmp'] = $username . '.' . $_FILES['image_tmp']['type'];
                         $data['data']['url'] = $images_path . $data['data']['image_tmp'];
                         $data['success'] = true;
                     } else {

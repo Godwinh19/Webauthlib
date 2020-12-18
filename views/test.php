@@ -47,7 +47,7 @@
         webauthlib({
             action: "LOGIN",
             images_path: "images/",
-            images_tmp_path: "tmp/",
+            images_path_tmp: "tmp/",
             upload_link: location.origin + "/WebAuthLib/webauth/upload.php",
             auth_field: "name",
             lang: 'fr'

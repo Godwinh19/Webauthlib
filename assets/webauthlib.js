@@ -80,7 +80,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                             let field_value = $('#' + auth_field).val();
                             await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link, lang).then(status => {
                                 if (status.success) {
-                                    sub.submit();
+                                    // sub.submit();
                                 } else {
                                     console.log(status.message);
 
@@ -191,7 +191,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                 var canvas = null;
                 var photo = null;
                 var startbutton = null;
-                var api_link = "192.168.8.111:5000";
+                var api_link = "http://192.168.8.103:5000";
 
                 image = null;
 
@@ -251,7 +251,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                             let pathImage1 = link + document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") + '.png';
 
                             let block = image.split(";");
-                            let contentType = block[0].split(":")[1];
+                            let contentType = (block[0].split(":")[1]).split("/")[1];
                             let realData = block[1].split(",")[1];
                             let blob_image_2 = b64toBlob(realData, contentType);
 
