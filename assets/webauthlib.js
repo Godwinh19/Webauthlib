@@ -8,9 +8,10 @@
  * @param {String} upload_link Link where is located the upload.php file attached to the library
  * @param {String} images_path Path of the folder that hold all users fingerprints images
  * @param {String} lang "en" Langage of usage of the library "en" | "fr" | "EN" | "FR"
+ * @param {Boolean} fcolumn "false" Align the cards by flex direction column
  * @returns {void}
  */
-function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
+function webauthlib({ action, auth_field, upload_link, images_path, lang, fcolumn }) {
     if (lang === undefined || lang === null || ['fr', 'en', 'FR', 'EN'].findIndex(lg => lg === lang) === -1) {
         lang = 'en';
     }
@@ -44,19 +45,19 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <span id="lib_error_message"> </span>
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
-                            <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
-                                <div class="col-md-5 mb-3">
+                            <div class="row col-md-12 text-center m-auto d-flex flex-${!!fcolumn ? 'column' : 'row'} justify-content-between align-items-center">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto" style="width: 20rem;">
                                         <div class="camera">
                                             <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                         </div>
                                         <div class="card-body text-center">
                                             <h3 class="card-title">${lang.toLowerCase() === 'fr' ? 'Caméra' : 'Camera'}</h3>
-                                            <div><button id="startbutton" class="btn btn-success">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
+                                            <div><button id="startbutton" class="btn btn-secondary">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-md-5 mb-3">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto h-auto" style="width: 20rem;">
                                         <div class="output">
                                             <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
@@ -207,19 +208,19 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <span id="lib_error_message"> </span>
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
-                            <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
-                                <div class="col-md-5 mb-3">
+                            <div class="row col-md-12 text-center m-auto d-flex flex-${!!fcolumn ? 'column' : 'row'} justify-content-between align-items-center">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto" style="width: 20rem;">
                                         <div class="camera">
                                             <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
                                         </div>
                                         <div class="card-body text-center">
                                             <h3 class="card-title">${lang.toLowerCase() === 'fr' ? 'Caméra' : 'Camera'}</h3>
-                                            <div><button id="startbutton" class="btn btn-success">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
+                                            <div><button id="startbutton" class="btn btn-secondary">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-md-5 mb-3">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
                                     <div class="card shadow m-auto h-auto" style="width: 20rem;">
                                         <div class="output">
                                             <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
