@@ -53,7 +53,7 @@
                                         text-hidden" style="font-size: 13px;"></span>
                             </div>
                         </div>
-                        <div id="auth" class="pt-2"></div>
+                        <div id="auth" class="p-2 pt-4"></div>
                         <div class="d-flex align-items-center justify-content-between pt-2">
                             <button class="btn btn-outline-danger" onclick="location.href= 'test.php'"><i class="fa fa-angle-double-left pr-2"></i>Annuler</button>
                             <button type="submit" class="btn btn-success float-right">S'inscrire <i class="fa fa-user-plus ml-2"></i></button>

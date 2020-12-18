@@ -8,9 +8,10 @@
  * @param {String} upload_link Link where is located the upload.php file attached to the library
  * @param {String} images_path Path of the folder that hold all users fingerprints images
  * @param {String} lang "en" Langage of usage of the library "en" | "fr" | "EN" | "FR"
+ * @param {Boolean} fcolumn "false" Align the cards by flex direction column
  * @returns {void}
  */
-function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
+function webauthlib({ action, auth_field, upload_link, images_path, lang, fcolumn }) {
     if (lang === undefined || lang === null || ['fr', 'en', 'FR', 'EN'].findIndex(lg => lg === lang) === -1) {
         lang = 'en';
     }
@@ -32,24 +33,38 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                 function startup() {
                     let div = document.getElementById('auth');
                     div.innerHTML = `
-                        <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>${lang === 'fr' || lang === 'FR' ? 'Attention' : 'Warning'} !</strong>
-                            <span id="lib_error_message"> </span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="form-row d-flex align-items-start justify-content-around">
-                            <div class="form-group col-md-5 p-0 border rounded">
-                                <div class="camera m-2" style="height: 320px; text-align: center;">
-                                    <video id="video" class="center">${lang === 'fr' || lang === 'FR' ? "Video stream indisponible" : "Video stream unavailable"}</video>
-                                </div>
-                                <div class="text-center p-2"><button id="startbutton" type='button' class="btn btn-secondary"><i class="fa fa-camera"></i></button></div>
+                        <div class="form-row-total m-auto">
+                            <style>
+                                .text-hidden {
+                                    display: none;
+                                }
+                            </style>
+                            <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <span id="lib_error_message"> </span>
+                                <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
-                            <div class="form-group col-md-5 border rounded">
-                                <div class="output m-2" style="text-align: center;">
-                                    <canvas id="canvas" hidden></canvas>
-                                    <img id="photo" src="" height="320" width="80%" alt="${lang === 'fr' || lang === 'FR' ? 'La capture apparaîtra dans ce champ' : 'The screen capture will appear in this box'}">
+                            <div class="row col-md-12 text-center m-auto d-flex flex-${!!fcolumn ? 'column' : 'row'} justify-content-between align-items-center">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
+                                    <div class="card shadow m-auto" style="width: 20rem;">
+                                        <div class="camera">
+                                            <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <h3 class="card-title">${lang.toLowerCase() === 'fr' ? 'Caméra' : 'Camera'}</h3>
+                                            <div><button id="startbutton" class="btn btn-secondary">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
+                                    <div class="card shadow m-auto h-auto" style="width: 20rem;">
+                                        <div class="output">
+                                            <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
+                                            <img id="photo" src="" class="card-img-top" alt="${lang.toLowerCase() === 'fr' ? 'La capture apparaîtra dans ce champ' : 'The screen capture will appear in this box'}" style="height: 352px">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="text-center p-2"><span class="btn btn-outline-secondary"><i class="fa fa-spinner"></i></span></div>
                             </div>
                         </div>
                     `
@@ -57,8 +72,8 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     let form = $('#auth').parents('form')[0];
 
                     form.addEventListener('submit', async function (e) {
-                        e.preventDefault();
                         const sub = e.currentTarget;
+                        e.preventDefault();
 
                         if (!!image) {
                             let field_value = $('#' + auth_field).val();
@@ -84,10 +99,10 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                         } else {
                             let lib_error = document.getElementById("lib_error");
                             let lib_error_message = document.getElementById("lib_error_message");
-                            lib_error_message.innerText = lang === 'fr' || lang === 'FR' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
+                            lib_error_message.innerText = lang.toLowerCase() === 'fr' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                         }
-                    }, true);
+                    }, false);
 
                     video = document.getElementById('video');
                     canvas = document.getElementById('canvas');
@@ -103,7 +118,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     }).catch(function (err) {
                         let lib_error = document.getElementById("lib_error");
                         let lib_error_message = document.getElementById("lib_error_message");
-                        lib_error_message.innerText = lang === 'fr' || lang === 'FR' ? "Une erreur s'est produite avec la caméra !" : 'An error occured with the camera !';
+                        lib_error_message.innerText = lang.toLowerCase() === 'fr' ? "Une erreur s'est produite avec la caméra !" : 'An error occured with the camera !';
                         !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
 
                         console.log("An error occurred: " + err);
@@ -154,7 +169,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                         photo.setAttribute('src', data);
 
                         image = data;
-                        console.log(image);
+                        // console.log(image);
                     } else {
                         clearphoto();
                     }
@@ -182,31 +197,46 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                 function startup() {
                     let div = document.getElementById('auth');
                     div.innerHTML = `
-                        <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>${lang === 'fr' || lang === 'FR' ? 'Attention' : 'Warning'} !</strong> 
-                            <span id="lib_error_message"> </span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <div class="col-lg-5">
-                                <div class="camera">
-                                    <video id="video">${lang === 'fr' || lang === 'FR' ? "Video stream indisponible" : "Video stream unavailable"}</video>
-                                </div>
+                        <div class="form-row-total m-auto">
+                            <style>
+                                .text-hidden {
+                                    display: none;
+                                }
+                            </style>
+                            <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                                <span id="lib_error_message"> </span>
+                                <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
-                            <div><button id="startbutton" class="btn btn-primary">${lang === 'fr' || lang === 'FR' ? "Capturer l'empreinte" : 'Capture fingerprint'}</button></div>
-                            <div class="col-lg-5">
-                                <div class="output">
-                                    <canvas id="canvas"></canvas>
-                                    <img id="photo" src="" alt="${lang === 'fr' || lang === 'FR' ? 'La capture apparaîtra dans ce champ' : 'The screen capture will appear in this box'}">
+                            <div class="row col-md-12 text-center m-auto d-flex flex-${!!fcolumn ? 'column' : 'row'} justify-content-between align-items-center">
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
+                                    <div class="card shadow m-auto" style="width: 20rem;">
+                                        <div class="camera">
+                                            <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <h3 class="card-title">${lang.toLowerCase() === 'fr' ? 'Caméra' : 'Camera'}</h3>
+                                            <div><button id="startbutton" class="btn btn-secondary">${lang.toLowerCase() === 'fr' ? 'Capturer' : 'Take photo'}</button></div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="col-md-${!!fcolumn ? '12' : '5'} mb-3">
+                                    <div class="card shadow m-auto h-auto" style="width: 20rem;">
+                                        <div class="output">
+                                            <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
+                                            <img id="photo" src="" class="card-img-top" alt="${lang.toLowerCase() === 'fr' ? 'La capture apparaîtra dans ce champ' : 'The screen capture will appear in this box'}" style="height: 352px">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     `
+
                     let form = $('#auth').parents('form')[0];
 
                     form.addEventListener('submit', async function (e) {
-                        e.preventDefault();
                         const sub = e.currentTarget;
+                        e.preventDefault();
                         if (!!image) {
                             let link = "";
                             let tab = upload_link.split("/");
@@ -224,10 +254,10 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
 
                             //convert image got by path to base 64
                             //blob1
-                            let block=image.split(";");
-                            let contentType=block[0].split(":")[1];
-                            let realData=block[1].split(",")[1];
-                            let blob_image_2=b64toBlob(realData,contentType)
+                            let block = image.split(";");
+                            let contentType = block[0].split(":")[1];
+                            let realData = block[1].split(",")[1];
+                            let blob_image_2 = b64toBlob(realData, contentType)
 
 
                             //blob2
@@ -237,14 +267,14 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                             //  realData = block[1].split(",")[1];
                             // let blob2 = b64toBlob(realData, contentType)
 
-                            await login_sendPictures(pathImage1, blob_image_2,document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_") ,api_link,upload_link, lang).then(response => {
+                            await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, lang).then(response => {
                                 console.log("Request was successfull");
                                 console.log(response)
                                 sub.submit();
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
                                 let lib_error_message = document.getElementById("lib_error_message");
-                                lib_error_message.innerText = lang === 'fr' || lang === 'FR' ? "Une erreur s'est produite avec lors de l'authentification !" : 'An error occured during the authentification !';
+                                lib_error_message.innerText = lang.toLowerCase() === 'fr' ? "Une erreur s'est produite avec lors de l'authentification !" : 'An error occured during the authentification !';
                                 !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
 
                                 console.log(reason);
@@ -252,7 +282,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                         } else {
                             let lib_error = document.getElementById("lib_error");
                             let lib_error_message = document.getElementById("lib_error_message");
-                            lib_error_message.innerText = lang === 'fr' || lang === 'FR' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
+                            lib_error_message.innerText = lang.toLowerCase() === 'fr' ? "Image indisponible. Veuillez la reprendre !" : 'Image unavailable. Please take it again !';
                             !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
                         }
                     }, true);
@@ -271,7 +301,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                     }).catch(function (err) {
                         let lib_error = document.getElementById("lib_error");
                         let lib_error_message = document.getElementById("lib_error_message");
-                        lib_error_message.innerText = lang === 'fr' || lang === 'FR' ? "Une erreur s'est produite avec la caméra !" : 'An error occured with the camera !';
+                        lib_error_message.innerText = lang.toLowerCase() === 'fr' ? "Une erreur s'est produite avec la caméra !" : 'An error occured with the camera !';
                         !!lib_error && lib_error.classList.contains("text-hidden") && lib_error.classList.remove("text-hidden");
 
                         console.log("An error occurred : " + err);
@@ -417,7 +447,7 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
             console.log(upload);
 
             if (upload.success) {
-                return { success: true, message: lang === 'fr' || lang === 'FR' ? "Envoi d'image réussie" : "Image sending succeeded" };
+                return { success: true, message: lang.toLowerCase() === 'fr' ? "Envoi d'image réussie" : "Image sending succeeded" };
             } else {
                 throw new Error(lang == 'fr' ? "Échec d'envoi de l'image" : "Failed to send the image");
             }
@@ -429,7 +459,7 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
         }
     } catch (error) {
         console.log(error.message);
-        return { success: false, message: error.message };
+        return { success: false, message: lang.toLowerCase() === 'fr' ? "Veuillez  vérifier les permissions du dossier des images !" : "Please, verify the images folder permissions !" };
     }
 }
 
@@ -444,12 +474,11 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
  * @param lang
  * @returns {void}
  */
-const login_sendPictures = async (pathImage1, blob, username,api_link,upload_tmp_link, lang) => {
+const login_sendPictures = async (pathImage1, blob, username, api_link, upload_tmp_link, lang) => {
     try {
-
         //1-save image taken to tmp directory
         username = username.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_");
-        let images_path_tmp="images_tmp/"
+        let images_path_tmp = "images_tmp/"
         let data_tmp = new FormData();
         data_tmp.append('image_tmp', blob);
         data_tmp.append('username', username);
@@ -468,10 +497,8 @@ const login_sendPictures = async (pathImage1, blob, username,api_link,upload_tmp
             console.log(upload_tmp);
 
             if (upload_tmp.success) {
-
-
                 //2-call for API to handling images
-                let pathImage2=location.origin + "/WebAuthLib/webauth/"+upload_tmp.data.url
+                let pathImage2 = location.origin + "/WebAuthLib/webauth/" + upload_tmp.data.url
 
                 let data = new FormData();
                 console.log(pathImage1);
@@ -485,16 +512,14 @@ const login_sendPictures = async (pathImage1, blob, username,api_link,upload_tmp
                         'Accept': 'application/json'
                     },
                     body: data
-                })
+                });
 
 
                 if (upload.ok) {
-                    await  deleteImagesFolder();
+                    await deleteImagesFolder();
                     upload = await upload.json();
                     console.log(upload);
                     //deleting tmp images folders
-
-
 
                     if (upload.success) {
                         return { success: true, message: lang === 'fr' || lang === 'FR' ? "Authentificaton réussie" : "Authentication succeeded" };
@@ -507,13 +532,6 @@ const login_sendPictures = async (pathImage1, blob, username,api_link,upload_tmp
 
                     throw new Error(lang == 'fr' ? "Échec d'authentification" : "Authentication failed");
                 }
-
-
-
-
-
-
-
             } else {
                 throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
             }
@@ -523,23 +541,21 @@ const login_sendPictures = async (pathImage1, blob, username,api_link,upload_tmp
 
             throw new Error(lang == 'fr' ? "Échec de sauvegarde de l'image" : "Failed to save the image");
         }
-
-
-
-
     } catch (error) {
         console.log(error.message);
-        return { success: false, message: error.message };
+        return { success: false, message: lang.toLowerCase() === 'fr' ? "Veuillez  vérifier les permissions du dossier des images !" : "Please, verify the images folder permissions !" };
     }
 }
 
 
 
-
-const deleteImagesFolder = async ()=>
-{
+/**
+ * Delete tmp images from the tmp folder
+ * @returns {void}
+ */
+const deleteImagesFolder = async () => {
     let data = new FormData();
-    data.append("path_dir","images_tmp/")
+    data.append("path_dir", "images_tmp/")
 
     let upload = await fetch(location.origin + "/WebAuthLib/webauth/remove_tampon.php", {
         method: 'POST',
@@ -551,12 +567,5 @@ const deleteImagesFolder = async ()=>
 
     if (upload.ok) {
         upload = await upload.json();
-
     }
-
-
-
-
-
-
-    }
+}

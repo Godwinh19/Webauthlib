@@ -14,7 +14,7 @@ function delTree($dir)
 }
 
 
-
+// 
 $path=$_POST['path_dir'];
 delTree($path);
 $data = ['success' => true];
