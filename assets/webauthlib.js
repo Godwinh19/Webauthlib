@@ -5,9 +5,9 @@
  * All rights reserved
  * @param {String} action Action name "REGISTER" | "LOGIN"
  * @param {String} auth_field Field in the form that hold value for naming images
- * @param {String} upload_link Link where is located the upload.php file attached to the library
+ * @param {String} upload_link Link where is located the webauthlib.php file attached to the library
  * @param {String} images_path Path of the folder that hold all users fingerprints images
- * @param {String} images_path_tmp Path of temporary images folder from upload.php folder as specified for images_path
+ * @param {String} images_path_tmp Path of temporary images folder from webauthlib.php folder as specified for images_path
  * @param {String} lang "en" Langage of usage of the library "en" | "fr" | "EN" | "FR"
  * @param {Boolean} fcolumn "false" Align the cards by flex direction column
  * @returns {void}
@@ -407,7 +407,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
  * @param {Blob} image Image to send for registering
  * @param {String} username Username, the name to attach to the image for authentification
  * @param {String} images_path Local path where to save the images
- * @param {String} upload_link Link of the upload.php file
+ * @param {String} upload_link Link of the webauthlib.php file
  * @returns {Object}
  */
 const register_sendPicture = async (image, username, images_path, upload_link, lang) => {
@@ -459,7 +459,7 @@ const register_sendPicture = async (image, username, images_path, upload_link, l
  * @param {Blob} blob Second image
  * @param {String} username Authentication field value
  * @param {String} api_link Link of the compairison api
- * @param {String} upload_link Link of upload.php file
+ * @param {String} upload_link Link of webauthlib.php file
  * @param {String} images_path_tmp Folder of temporary images
  * @param {String} lang Langage token
  * @returns {void}
@@ -543,7 +543,7 @@ const login_sendPictures = async (pathImage1, blob, username, api_link, upload_l
 
 /**
  * Delete tmp images from the tmp folder
- * @param {String} upload_link Link of upload.php file
+ * @param {String} upload_link Link of webauthlib.php file
  * @param {String} images_path_tmp Temporary files folder
  * @param {String} lang Language token
  * @returns {void}
