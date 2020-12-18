@@ -22,6 +22,9 @@ The library uses bootstrap 5 and jquery. You can use a CDN if wanted.
     ```
     <script src="[parents]/webauthlib/webauthlib.js"></script>
     ```
+
+- Add a ``` <div id="auth"></div> ``` to the form that authenticate the user
+
 - Next, add a script tag that will call the library :
     ```
     <script>
