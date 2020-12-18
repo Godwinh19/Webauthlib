@@ -45,7 +45,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
                             <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-5 mb-3">
                                     <div class="card shadow m-auto" style="width: 20rem;">
                                         <div class="camera">
                                             <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
@@ -56,7 +56,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-md-5">
+                                <div class="col-md-5 mb-3">
                                     <div class="card shadow m-auto h-auto" style="width: 20rem;">
                                         <div class="output">
                                             <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
@@ -208,7 +208,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                 <button type="button" class="btn-close" onclick="document.getElementById('lib_error').classList.add('text-hidden')"></button>
                             </div>
                             <div class="row col-md-12 text-center m-auto d-flex justify-content-between align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-5 mb-3">
                                     <div class="card shadow m-auto" style="width: 20rem;">
                                         <div class="camera">
                                             <video id="video" class="card-img-top" style="height: 233px; object-fit: cover">${lang.toLowerCase() === 'fr' ? "Video stream indisponible" : "Video stream unavailable"}</video>
@@ -219,7 +219,7 @@ function webauthlib({ action, auth_field, upload_link, images_path, lang }) {
                                         </div>
                                     </div>
                                 </div> 
-                                <div class="col-md-5">
+                                <div class="col-md-5 mb-3">
                                     <div class="card shadow m-auto h-auto" style="width: 20rem;">
                                         <div class="output">
                                             <canvas id="canvas" class="card-img-top" style="display: none"></canvas>
