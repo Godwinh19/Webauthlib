@@ -80,7 +80,9 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                             let field_value = $('#' + auth_field).val();
                             await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link, lang).then(status => {
                                 if (status.success) {
-                                    // sub.submit();
+                                    setTimeout(() => {
+                                        sub.submit();
+                                    }, 1500);
                                 } else {
                                     console.log(status.message);
 
@@ -258,7 +260,9 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                             await login_sendPictures(pathImage1, blob_image_2, document.getElementById('name').value.replace(/[ &\/\\#,+()$~%."'`:*?<>{} !@=]/g, "_"), api_link, upload_link, images_path_tmp, lang).then(response => {
                                 console.log("Request was successfull");
                                 console.log(response);
-                                // sub.submit();
+                                setTimeout(() => {
+                                    sub.submit();
+                                }, 1500);
                             }).catch(reason => {
                                 let lib_error = document.getElementById("lib_error");
                                 let lib_error_message = document.getElementById("lib_error_message");
