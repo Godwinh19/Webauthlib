@@ -40,6 +40,11 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                                     display: none;
                                 }
                             </style>
+                            <div id="lib_success" class="text-hidden alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
+                                <span id="lib_success_message"> </span>
+                                <button type="button" class="btn-close" onclick="document.getElementById('lib_success').classList.add('text-hidden')"></button>
+                            </div>
                             <div id="lib_error" class="text-hidden alert alert-warning alert-dismissible fade show" role="alert">
                                 <strong>${lang.toLowerCase() === 'fr' ? 'Attention' : 'Warning'} !</strong>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -80,8 +85,13 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                             let field_value = $('#' + auth_field).val();
                             await register_sendPicture(image, field_value, (!!images_path && images_path.length > 0) ? images_path : "", upload_link, lang).then(status => {
                                 if (status.success) {
+                                    let lib_success = document.getElementById("lib_success");
+                                    let lib_success_message = document.getElementById("lib_success_message");
+                                    lib_success_message.innerText = lang.toLowerCase() === 'fr' ? "Authentification réussie !" : "Authentication succeed !";
+                                    !!lib_success && lib_success.classList.contains("text-hidden") && lib_success.classList.remove("text-hidden");
+
                                     setTimeout(() => {
-                                        sub.submit();
+                                        // sub.submit();
                                     }, 2000);
                                 } else {
                                     console.log(status.message);
@@ -266,11 +276,11 @@ function webauthlib({ action, auth_field, upload_link, images_path, images_path_
                                 if (response.success) {
                                     let lib_success = document.getElementById("lib_success");
                                     let lib_success_message = document.getElementById("lib_success_message");
-                                    lib_success_message.innerText = lang.toLowerCase() === 'fr' ? "Authentification réussie" : "Authentication failed";
+                                    lib_success_message.innerText = lang.toLowerCase() === 'fr' ? "Authentification réussie !" : "Authentication succeed !";
                                     !!lib_success && lib_success.classList.contains("text-hidden") && lib_success.classList.remove("text-hidden");
 
                                     setTimeout(() => {
-                                        sub.submit();
+                                        // sub.submit();
                                     }, 2000);
                                 } else {
                                     let lib_error = document.getElementById("lib_error");
